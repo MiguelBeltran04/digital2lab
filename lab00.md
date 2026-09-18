@@ -5,7 +5,7 @@
 
 ## Integrantes
 
-- Nombre completo – DNI
+- Miguel Esteban Beltrán Silva – 1025524635
 - Nombre completo – DNI
 - Nombre completo – DNI
 
