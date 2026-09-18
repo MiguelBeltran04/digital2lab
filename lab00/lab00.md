@@ -81,6 +81,18 @@ Incluya:
 
 ## Implementación
 
+El codigo se termino organizando en bloques, antes de estos se definieron cuales iban a ser las entradas, salidas, constantes y variables a implementar. Los dos primeros bloques muestran las acciones que tendrian ciertas variables una vez se aplique el reset y por ultimo, se coloco un bloque donde se muestra la implemetnación de los estados.
+
+En el primero se define que si se activa el "rst" o si "reset_contador" es igual a 1 (En la imagen donde se muestra la grafica de "reset_contador" se ve que este se acriva un ciclo de reloj antes, basicamente se hace para que la variable sea igual a 1 y cuando por ejemplo en elestado verde se haya llegado al quinto flanco de subida, el contador se reinicie justo al cambiar al siguiente estado que seria el amarillo). Tambien se define que le pasa a la variable "direccion" cuando se activa el "rst" (sera igual a cero), cuando esta el "estado_actual"sea igual al estado S0 (tambien sera igual a cero) y cuando este en el estado S2 (Cambiara a 1).
+
+En el bloque #2, se define que al activarse el "rst", el "estado_actual" sea S0, si no, constantemente se le asignara a "estado_actual" la variable "estado_siguiente".
+
+En el penultimo bloque, siempre se incia igualando "estado_actual" con "estado_siguiente" y con "reset_contador" en cero (Abajo del bloque se deja claro que estado actual tiene que ser si o si S0 por defecto). Posterior a esto una vez este en el Estado verde, se va a esperar a que "contador" sea mayor o igual a 4, se dfine cual sera el estado siguiente y se indica que se va a reiniciar el contador. Lo mismo pasa para los otros dos estados (En el caso del amarillo, se deja claro que dependiendo del valor de dirección, el siguiente estado sera el verde o el rojo).
+
+Al final, en el ultimo bloque se definen como van a ser las salidas dependiendo del estado ene el que se encuentre la maquina.
+
+
+
 Explique cómo se implementó el diseño en Verilog.
 
 Incluya:
@@ -93,6 +105,13 @@ Incluya:
 ---
 
 ## Conclusiones
+
+### Ejercicio #1
+
+En este ejercicio se logro realizar una maquina de estado de Moore y se logro implementar en un entorno como GTKWave para poder visualizar si esta cumplia todos los requerimentos y objetivos previamente propuestos. Esto es importante ya que en el momento en el que se quiera implementar en una FPGA, se tiene que tener cuidado con el funcionamiento de las señales de salida por ejemplo o con los clocks, para evitar asi afectaciones en la FPGA y en circuito fisico.
+
+Dentro de las dificultades encontradas, se encuentran el diseño del diagrama de Estados, ya que con base en este se realiza todo el codigo y se tiene que dejar muy en claro bahjo que entradas o variables se van a realizar los cambios de Estadosy  asi evitar bucles infinitos o transiciones no deseadas.
+
 
 - Principales aprendizajes del laboratorio.
 - Dificultades encontradas.
