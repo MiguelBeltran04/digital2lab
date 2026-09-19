@@ -182,6 +182,8 @@ Para validar el funcionamiento del transmisor serial, se diseñó un *testbench*
 <!-- INSTRUCCIONES: Redacta tus conclusiones de forma directa y resumida. -->
 [Escribe aquí tus conclusiones del ejercicio 3...]
 
+---
+
 * **Principales aprendizajes:** [Escribe el aprendizaje principal sobre el diseño e interpretación del diagrama de flujo]
 * **Dificultades encontradas:** [Menciona la dificultad principal, ej. ajustar la temporización de los contadores]
 * **Importancia de la simulación:** [Explica brevemente por qué fue útil validar las formas de onda en GTKWave]
