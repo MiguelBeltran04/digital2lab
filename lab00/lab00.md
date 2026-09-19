@@ -138,9 +138,15 @@ El diseño consiste en un transmisor serial síncrono de 8 bits controlado por u
 
 ### Ejercicio #3
 
-<!-- INSTRUCCIONES: Breve introducción al código en Verilog del módulo principal (serial_tx.v). -->
-[Escribe aquí una breve explicación del código fuente del hardware...]
+El diseño del transmisor serial síncrono se estructuró separando claramente la lógica de control de la ruta de datos. Esto facilita la legibilidad del hardware y asegura una correcta sincronización entre las señales de control y el manejo de los bits.
 
+* **Organización del código:** El módulo se divide en 4 bloques funcionales:
+  * **Registro de estado:** Actualización secuencial del estado actual.
+  * **Lógica de estado siguiente:** Bloque combinacional que evalúa transiciones basadas en `start`, `tick_cnt` y `bit_count`.
+  * **Datapath y contadores:** Gestión secuencial de la carga del dato, desplazamiento a la derecha del registro (`shift_reg`) y control de la temporización (`tick_cnt`).
+  * **Salidas:** Asignación combinacional continua donde las señales dependen exclusivamente del estado actual.
+* **Manejo de reloj y reset:** El sistema es completamente síncrono, operando en los flancos de subida del reloj (`posedge clk`). La señal de reinicio (`rst`) actúa de forma síncrona forzando el estado a `IDLE` y limpiando los registros y contadores de la ruta de datos.
+* **Comportamiento esperado del sistema:** La línea `tx` se mantiene estable en `1` lógico durante el reposo. Al iniciar una transmisión, emite los datos comenzando por el LSB, manteniendo cada bit el tiempo definido por `CLKS_PER_BIT`. La señal `busy` permanece en alto durante todo el proceso, y `done` emite un pulso exacto de un ciclo de reloj al finalizar el último bit.
 * **Código fuente del módulo:** [`src/serial_tx.v`](../src/serial_tx.v)
 
 ---
