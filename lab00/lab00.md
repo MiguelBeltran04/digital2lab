@@ -163,7 +163,8 @@ Dentro de las dificultades encontradas, se encuentran el diseño del diagrama de
 
 ### Ejercicio #3
 
-<img width="1622" height="301" alt="Simulación GTKWave Ejercicio 3" src="RUTA_O_ENLACE_DE_TU_CAPTURA_GTKWAVE" />
+<img width="1615" height="441" alt="image" src="https://github.com/user-attachments/assets/09b9afed-19c7-479f-855b-2276338fdcb9" />
+
 
 ---
 
