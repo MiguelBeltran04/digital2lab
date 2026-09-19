@@ -150,19 +150,20 @@ El diseño del transmisor serial síncrono se estructuró separando claramente l
 * **Código fuente del módulo:** [`src/serial_tx.v`](../src/serial_tx.v)
 
 ---
-
 ## Simulaciones
 
 ### Ejercicio #3
 
-<!-- INSTRUCCIONES: Descripción de las pruebas realizadas y análisis de las señales. -->
-[Escribe aquí la explicación breve de las pruebas realizadas en la simulación...]
+Para validar el funcionamiento del transmisor serial, se diseñó un *testbench* que inyecta datos y señales de control para comprobar el correcto desplazamiento y temporización de los bits.
 
-* **Descripción del testbench:** [Escribe qué datos probaste (ej. 0xA5 y 0x3C) y cómo aplicaste las señales de reset y start]
+* **Descripción del testbench:** Se configuró un reloj de 100MHz (periodo de 10ns) y se aplicó un reinicio síncrono inicial (`rst=1`). Posteriormente, se realizaron dos pruebas de transmisión secuenciales enviando los valores hexadecimales `0xA5` (binario: `10100101`) y `0x3C` (binario: `00111100`). En ambas pruebas, la transmisión se activa mediante un pulso de un ciclo en la señal `start`, esperando a que la señal `done` se active antes de proceder con el siguiente dato.
 * **Código del testbench:** [`src/serial_tx_tb.v`](../src/serial_tx_tb.v)
-* **Señales observadas:** [Menciona brevemente el comportamiento de tx, busy, done y los contadores internos]
-* **Resultados obtenidos:** [Confirma que la transmisión fue correcta y respetó los tiempos de CLKS_PER_BIT]
-
+* **Señales observadas:** 
+  * `tx`: Transmite los bits de manera serial iniciando desde el bit menos significativo (LSB).
+  * `busy`: Pasa a nivel alto al recibir la señal `start` y se mantiene así durante toda la ráfaga de transmisión.
+  * `done`: Emite un pulso de un ciclo exacto al terminar de enviar el octavo bit.
+  * `Estado y Contadores`: Se aprecian las transiciones del registro de estado y cómo el contador de temporización asegura el ancho de cada bit, mientras el contador de bits va de 0 a 7.
+* **Resultados obtenidos:** El resultado en el visor de ondas es el esperado. Se verificó exitosamente que el módulo mantiene cada bit durante los 8 ciclos de reloj definidos por el parámetro `CLKS_PER_BIT`, serializa los datos de forma impecable y levanta las banderas de control (`busy` y `done`) en los tiempos exactos estipulados por el diseño.
 
 ### Evidencias
 
@@ -171,7 +172,6 @@ El diseño del transmisor serial síncrono se estructuró separando claramente l
 <img width="1615" height="441" alt="image" src="https://github.com/user-attachments/assets/09b9afed-19c7-479f-855b-2276338fdcb9" />
 
 
----
 
 ---
 
