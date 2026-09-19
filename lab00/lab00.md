@@ -119,5 +119,69 @@ Dentro de las dificultades encontradas, se encuentran el diseño del diagrama de
 
 ---
 
+## Diseño implementado
+
+### Ejercicio #3
+
+El diseño consiste en un transmisor serial síncrono de 8 bits controlado por una máquina de estados algorítmica (ASM). Su función principal es recibir un byte en paralelo, serializarlo (enviando el bit menos significativo primero) y controlar con precisión la duración de cada bit en la línea de transmisión utilizando contadores internos.
+
+* **Tipo de sistema:** Transmisor serial síncrono (ASM / Control y datos representado mediante diagrama de flujo)
+* **Pasos/Etapas del flujo:** IDLE, LOAD, BIT_HOLD, SHIFT_NEXT, DONE_ST
+* **Funcionamiento general:** El sistema reposa en `IDLE` hasta recibir la señal `start`. En `LOAD`, captura el dato de entrada y inicializa los contadores. Durante `BIT_HOLD`, expone el bit actual en la salida `tx` y espera el tiempo parametrizado (`CLKS_PER_BIT - 2`). En `SHIFT_NEXT`, desplaza el registro para preparar el siguiente bit y aumenta el contador de bits enviados. Tras procesar los 8 bits, pasa a `DONE_ST`, activa la bandera `done` por un ciclo y retorna al inicio.
+
+<img width="2184" height="3859" alt="_Diagrama algoritmico ej3" src="https://github.com/user-attachments/assets/955f3a62-3de7-4c5d-ba02-fc44b2917ab7" />
+
+
+---
+
+## Código
+
+### Ejercicio #3
+
+El diseño del transmisor serial síncrono se estructuró separando claramente la lógica de control de la ruta de datos. Esto facilita la legibilidad del hardware y asegura una correcta sincronización entre las señales de control y el manejo de los bits.
+
+* **Organización del código:** El módulo se divide en 4 bloques funcionales:
+  * **Registro de estado:** Actualización secuencial del estado actual.
+  * **Lógica de estado siguiente:** Bloque combinacional que evalúa transiciones basadas en `start`, `tick_cnt` y `bit_count`.
+  * **Datapath y contadores:** Gestión secuencial de la carga del dato, desplazamiento a la derecha del registro (`shift_reg`) y control de la temporización (`tick_cnt`).
+  * **Salidas:** Asignación combinacional continua donde las señales dependen exclusivamente del estado actual.
+* **Manejo de reloj y reset:** El sistema es completamente síncrono, operando en los flancos de subida del reloj (`posedge clk`). La señal de reinicio (`rst`) actúa de forma síncrona forzando el estado a `IDLE` y limpiando los registros y contadores de la ruta de datos.
+* **Comportamiento esperado del sistema:** La línea `tx` se mantiene estable en `1` lógico durante el reposo. Al iniciar una transmisión, emite los datos comenzando por el LSB, manteniendo cada bit el tiempo definido por `CLKS_PER_BIT`. La señal `busy` permanece en alto durante todo el proceso, y `done` emite un pulso exacto de un ciclo de reloj al finalizar el último bit.
+* **Código fuente del módulo:** [`src/serial_tx.v`](../src/serial_tx.v)
+
+---
+## Simulaciones
+
+### Ejercicio #3
+
+Para validar el funcionamiento del transmisor serial, se diseñó un *testbench* que inyecta datos y señales de control para comprobar el correcto desplazamiento y temporización de los bits.
+
+* **Descripción del testbench:** Se configuró un reloj de 100MHz (periodo de 10ns) y se aplicó un reinicio síncrono inicial (`rst=1`). Posteriormente, se realizaron dos pruebas de transmisión secuenciales enviando los valores hexadecimales `0xA5` (binario: `10100101`) y `0x3C` (binario: `00111100`). En ambas pruebas, la transmisión se activa mediante un pulso de un ciclo en la señal `start`, esperando a que la señal `done` se active antes de proceder con el siguiente dato.
+* **Código del testbench:** [`src/serial_tx_tb.v`](../src/serial_tx_tb.v)
+* **Señales observadas:** 
+  * `tx`: Transmite los bits de manera serial iniciando desde el bit menos significativo (LSB).
+  * `busy`: Pasa a nivel alto al recibir la señal `start` y se mantiene así durante toda la ráfaga de transmisión.
+  * `done`: Emite un pulso de un ciclo exacto al terminar de enviar el octavo bit.
+  * `Estado y Contadores`: Se aprecian las transiciones del registro de estado y cómo el contador de temporización asegura el ancho de cada bit, mientras el contador de bits va de 0 a 7.
+* **Resultados obtenidos:** El resultado en el visor de ondas es el esperado. Se verificó exitosamente que el módulo mantiene cada bit durante los 8 ciclos de reloj definidos por el parámetro `CLKS_PER_BIT`, serializa los datos de forma impecable y levanta las banderas de control (`busy` y `done`) en los tiempos exactos estipulados por el diseño.
+
+### Evidencias
+
+### Ejercicio #3
+
+<img width="1615" height="441" alt="image" src="https://github.com/user-attachments/assets/09b9afed-19c7-479f-855b-2276338fdcb9" />
+
+
+
+---
+
+## Conclusiones
+
+### Ejercicio #3
+
+El desarrollo de este transmisor nos ayudó a entender la ventaja de separar la lógica de control de la ruta de datos (datapath). También vimos que usar contadores internos es una forma muy práctica de controlar cuánto dura cada bit en la transmisión sin necesidad de modificar el reloj principal del sistema.
+
+Finalmente, como punto a mejorar para futuros diseños, nos dimos cuenta de que debimos incluir el diagrama de la máquina de estados (FSM) para la unidad de control, en lugar de poner únicamente el diagrama de flujo y el datapath. Esto no se añadio porque, al momento de hacer el ejercicio, en la clase magistral aún no se había profundizado en el tema de las máquinas algorítmicas (ASM), por lo que creíamos que el diagrama de flujo por sí solo era suficiente para documentar todo el sistema.
+
 ## Referencias
 
