@@ -119,5 +119,65 @@ Dentro de las dificultades encontradas, se encuentran el diseño del diagrama de
 
 ---
 
+## Diseño implementado
+
+### Ejercicio #3
+
+<!-- INSTRUCCIONES: Descripción breve del diseño y del flujo de funcionamiento (1-2 párrafos cortos). -->
+[Escribe aquí la descripción general del transmisor serial...]
+
+* **Tipo de sistema:** Transmisor serial síncrono (ASM / Control y datos representado mediante diagrama de flujo)
+* **Pasos/Etapas del flujo:** IDLE, LOAD, BIT_HOLD, SHIFT_NEXT, DONE_ST
+* **Funcionamiento general:** [Escribe aquí el resumen breve de cómo se transmite el byte de datos de entrada]
+
+<img width="1600" height="666" alt="Diagrama de flujo Ejercicio 3" src="RUTA_O_ENLACE_DE_TU_DIAGRAMA_DE_FLUJO" />
+
+---
+
+## Código
+
+### Ejercicio #3
+
+<!-- INSTRUCCIONES: Breve introducción al código en Verilog del módulo principal (serial_tx.v). -->
+[Escribe aquí una breve explicación del código fuente del hardware...]
+
+* **Código fuente del módulo:** [`src/serial_tx.v`](src/serial_tx.v)
+
+---
+
+## Simulaciones
+
+### Ejercicio #3
+
+<!-- INSTRUCCIONES: Descripción de las pruebas realizadas y análisis de las señales. -->
+[Escribe aquí la explicación breve de las pruebas realizadas en la simulación...]
+
+* **Descripción del testbench:** [Escribe qué datos probaste (ej. 0xA5 y 0x3C) y cómo aplicaste las señales de reset y start]
+* **Código del testbench:** [`src/serial_tx_tb.v`](src/serial_tx_tb.v)
+* **Señales observadas:** [Menciona brevemente el comportamiento de tx, busy, done y los contadores internos]
+* **Resultados obtenidos:** [Confirma que la transmisión fue correcta y respetó los tiempos de CLKS_PER_BIT]
+
+
+### Evidencias
+
+### Ejercicio #3
+
+<img width="1622" height="301" alt="Simulación GTKWave Ejercicio 3" src="RUTA_O_ENLACE_DE_TU_CAPTURA_GTKWAVE" />
+
+---
+
+---
+
+## Conclusiones
+
+### Ejercicio #3
+
+<!-- INSTRUCCIONES: Redacta tus conclusiones de forma directa y resumida. -->
+[Escribe aquí tus conclusiones del ejercicio 3...]
+
+* **Principales aprendizajes:** [Escribe el aprendizaje principal sobre el diseño e interpretación del diagrama de flujo]
+* **Dificultades encontradas:** [Menciona la dificultad principal, ej. ajustar la temporización de los contadores]
+* **Importancia de la simulación:** [Explica brevemente por qué fue útil validar las formas de onda en GTKWave]
+
 ## Referencias
 
