@@ -130,7 +130,8 @@ Dentro de las dificultades encontradas, se encuentran el diseño del diagrama de
 * **Pasos/Etapas del flujo:** IDLE, LOAD, BIT_HOLD, SHIFT_NEXT, DONE_ST
 * **Funcionamiento general:** [Escribe aquí el resumen breve de cómo se transmite el byte de datos de entrada]
 
-<img width="1600" height="666" alt="Diagrama de flujo Ejercicio 3" src="RUTA_O_ENLACE_DE_TU_DIAGRAMA_DE_FLUJO" />
+<img width="2184" height="3859" alt="_Diagrama algoritmico ej3" src="https://github.com/user-attachments/assets/955f3a62-3de7-4c5d-ba02-fc44b2917ab7" />
+
 
 ---
 
