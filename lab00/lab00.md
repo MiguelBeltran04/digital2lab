@@ -141,7 +141,7 @@ Dentro de las dificultades encontradas, se encuentran el diseño del diagrama de
 <!-- INSTRUCCIONES: Breve introducción al código en Verilog del módulo principal (serial_tx.v). -->
 [Escribe aquí una breve explicación del código fuente del hardware...]
 
-* **Código fuente del módulo:** [`src/serial_tx.v`](src/serial_tx.v)
+* **Código fuente del módulo:** [`src/serial_tx.v`](../src/serial_tx.v)
 
 ---
 
@@ -153,7 +153,7 @@ Dentro de las dificultades encontradas, se encuentran el diseño del diagrama de
 [Escribe aquí la explicación breve de las pruebas realizadas en la simulación...]
 
 * **Descripción del testbench:** [Escribe qué datos probaste (ej. 0xA5 y 0x3C) y cómo aplicaste las señales de reset y start]
-* **Código del testbench:** [`src/serial_tx_tb.v`](src/serial_tx_tb.v)
+* **Código del testbench:** [`src/serial_tx_tb.v`](../src/serial_tx_tb.v)
 * **Señales observadas:** [Menciona brevemente el comportamiento de tx, busy, done y los contadores internos]
 * **Resultados obtenidos:** [Confirma que la transmisión fue correcta y respetó los tiempos de CLKS_PER_BIT]
 
