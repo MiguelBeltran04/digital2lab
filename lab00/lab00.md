@@ -123,12 +123,11 @@ Dentro de las dificultades encontradas, se encuentran el diseño del diagrama de
 
 ### Ejercicio #3
 
-<!-- INSTRUCCIONES: Descripción breve del diseño y del flujo de funcionamiento (1-2 párrafos cortos). -->
-[Escribe aquí la descripción general del transmisor serial...]
+El diseño consiste en un transmisor serial síncrono de 8 bits controlado por una máquina de estados algorítmica (ASM). Su función principal es recibir un byte en paralelo, serializarlo (enviando el bit menos significativo primero) y controlar con precisión la duración de cada bit en la línea de transmisión utilizando contadores internos.
 
 * **Tipo de sistema:** Transmisor serial síncrono (ASM / Control y datos representado mediante diagrama de flujo)
 * **Pasos/Etapas del flujo:** IDLE, LOAD, BIT_HOLD, SHIFT_NEXT, DONE_ST
-* **Funcionamiento general:** [Escribe aquí el resumen breve de cómo se transmite el byte de datos de entrada]
+* **Funcionamiento general:** El sistema reposa en `IDLE` hasta recibir la señal `start`. En `LOAD`, captura el dato de entrada y inicializa los contadores. Durante `BIT_HOLD`, expone el bit actual en la salida `tx` y espera el tiempo parametrizado (`CLKS_PER_BIT - 2`). En `SHIFT_NEXT`, desplaza el registro para preparar el siguiente bit y aumenta el contador de bits enviados. Tras procesar los 8 bits, pasa a `DONE_ST`, activa la bandera `done` por un ciclo y retorna al inicio.
 
 <img width="2184" height="3859" alt="_Diagrama algoritmico ej3" src="https://github.com/user-attachments/assets/955f3a62-3de7-4c5d-ba02-fc44b2917ab7" />
 
