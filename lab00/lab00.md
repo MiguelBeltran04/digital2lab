@@ -179,14 +179,9 @@ Para validar el funcionamiento del transmisor serial, se diseñó un *testbench*
 
 ### Ejercicio #3
 
-<!-- INSTRUCCIONES: Redacta tus conclusiones de forma directa y resumida. -->
-[Escribe aquí tus conclusiones del ejercicio 3...]
+El desarrollo de este transmisor nos ayudó a entender la ventaja de separar la lógica de control de la ruta de datos (datapath). También vimos que usar contadores internos es una forma muy práctica de controlar cuánto dura cada bit en la transmisión sin necesidad de modificar el reloj principal del sistema.
 
----
-
-* **Principales aprendizajes:** [Escribe el aprendizaje principal sobre el diseño e interpretación del diagrama de flujo]
-* **Dificultades encontradas:** [Menciona la dificultad principal, ej. ajustar la temporización de los contadores]
-* **Importancia de la simulación:** [Explica brevemente por qué fue útil validar las formas de onda en GTKWave]
+Finalmente, como punto a mejorar para futuros diseños, nos dimos cuenta de que debimos incluir el diagrama de la máquina de estados (FSM) para la unidad de control, en lugar de poner únicamente el diagrama de flujo y el datapath. Esto no se añadio porque, al momento de hacer el ejercicio, en la clase magistral aún no se había profundizado en el tema de las máquinas algorítmicas (ASM), por lo que creíamos que el diagrama de flujo por sí solo era suficiente para documentar todo el sistema.
 
 ## Referencias
 
