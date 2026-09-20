@@ -23,9 +23,8 @@
 
 ---
 
-## Diseño implementado
+## Diseño implementado Ejercicio #1
 
-### Ejercicio #1
 
 Para este ejercicio se decidió realizar una Maquina de estados de Moore en la cual se definieron 3 estados.
 * **Estados definidos:**
@@ -43,8 +42,6 @@ En el momento en el que la maquina se encuentre en el estado S1, esta tiene que 
 
 ## Simulaciones
 
-### Ejercicio #1
-
 En primer lugar en el testbench se encuentran las señales de entrada las cuales son "clk" y "rst", las cuales terminaran siendo manejadas activamente por el testbench, se colocaron las tres salidas y luego se genero el clk, en este caso va a tener un medio ciclo de 5 ns ya que previamente se definió una escala de 1ns/1ns (De ahí a que coloque el #5), se definio el nombre del nuevo archivo generado, el cual se usara para guardar todos los datos y asi, poder ser usados por GTKWave a la hora de realizar las graficas. Por ultimo se deja en el codigo la activación del reset con una duración de 20 ns, pasado ese tiempo este sera igual a cero y se indica que luego de esos 20 ns, la simulación dure 300 ns mas.
 
 A continuación  se explicara el comportamiento de las señales observadas en GTKWave, iniciando por las salidas. Se puede evidenciar que la maquina arroja las salidas correctamente, ya que hace la secuencia "verde, amarillo, rojo" y "rojo, amarillo, verde" de forma constante y nunca se queda en un bucle (Es decir, no se queda en el mismo estado). 
@@ -57,8 +54,6 @@ Con respecto a "estado_actual" se evidencia como siempre cambia de estado correc
 
 
 ### Evidencias
-
-### Ejercicio #1
 
 <img width="1622" height="301" alt="image" src="https://github.com/user-attachments/assets/addbd073-711c-433d-b940-66e6d4e39a55" />
 
@@ -77,8 +72,6 @@ El codigo se termino organizando en bloques y previo a esto se definieron cuales
   * **3:** En el ultimo bloque se definen como van a ser las salidas dependiendo del estado ene el que se encuentre la maquina.
   
 ## Conclusiones
-
-### Ejercicio #1
 
 En este ejercicio se logro realizar una maquina de estado de Moore y se logro implementar en un entorno como GTKWave para poder visualizar si esta cumplia todos los requerimentos y objetivos previamente propuestos. Esto es importante ya que en el momento en el que se quiera implementar en una FPGA, se tiene que tener cuidado con el funcionamiento de las señales de salida por ejemplo o con los clocks, para evitar asi afectaciones en la FPGA y en circuito fisico.
 
