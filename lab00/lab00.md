@@ -27,7 +27,11 @@
 
 ### Ejercicio #1
 
-Para este ejercicio se decidió realizar una Maquina de estados de Moore en la cual se definieron 3 estados. El S0 indica que la luz verde del semáforo esta activa, S1 indica que la luz amarilla esta activa y por ultimo el estado S2 indica que la luz roja esta encendida. 
+Para este ejercicio se decidió realizar una Maquina de estados de Moore en la cual se definieron 3 estados.
+* **Estados definidos:**
+  * **S0** Estado en el que el semaforo esta en verde (La simulación siempre iniciara ene ste estado).
+  * **S1** En este estado, el semaforo tiene la luz amarilla activa
+  * **S2** En este estado el semáforo tiene la luz roja encendida
 
 El sistema funciona de la siguiente manera: cada flanco de subida del clock hará que la maquina se mantenga en el mismo estado hasta que se llegue a un punto en donde la variable "contador" llegue a cierto valor (En el caso del estado verde tiene que llegar a 4 para que en el siguiente flanco de subida del clock, el cual seria el quinto, este automáticamente cambie de estado, en el caso del amarillo será 1 y en el caso del rojo será el 3). Un ciclo de reloj después se va a pasar al siguiente estado tal y como se ve en la imagen.
 
@@ -57,7 +61,6 @@ Con respecto a "estado_actual" se evidencia como siempre cambia de estado correc
 <img width="1622" height="301" alt="image" src="https://github.com/user-attachments/assets/addbd073-711c-433d-b940-66e6d4e39a55" />
 
 
-(Incluya capturas de pantalla de GTKWave donde se evidencie el correcto funcionamiento.)
 
 ---
 
