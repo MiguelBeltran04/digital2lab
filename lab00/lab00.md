@@ -8,18 +8,8 @@
 - Miguel Esteban Beltrán Silva – 1025524635
 - Sebastián Camilo Ortegon Hernandez – 1014861874
 - Andres Jacobo Rojas Gonzalez – 1025762831
-
-**Grupo de trabajo:**  
+ 
 **Semestre:** 2026-1  
-
----
-
-## Índice
-- [Diseño implementado](#diseño-implementado)
-- [Simulaciones](#simulaciones)
-- [Implementación](#implementación)
-- [Conclusiones](#conclusiones)
-- [Referencias](#referencias)
 
 ---
 
@@ -110,7 +100,7 @@ Dentro de las dificultades encontradas, se encuentran el diseño del diagrama de
       * **Reset (rst)** Al inicio del bloque always se deine la lógica secuencial por flancos. Al declarar ¨posedge clk or posedge rst¨ se garantiza que el sistema responda inmediatamente a una señal de reinicio sin necesidad de que el reloj cambie. Esto provoca que el reset sea asíncrono. Una vez activado, el sistema regresa al estado IDLE
       * **Reloj (clk)** Dentro del bloque always se declara un bloque principal ¨begin¨ la cual en ausencia de un reset se realizan todas las transiciones de estado de forma totalmente síncrona con el flanco de subida de la señal.
    * **Comportamiento esperado del sistema** El sistema debe esperar en el estado IDLE manteniendo la señal de done en 0. Si se activa la señal de start, se pasará al estado de LOAD, donde se delcara el registro acumulador en 0 y el contador inicia en 0 para luego pasar al estado de ADD. Durante el estado ADD un bloque case evalúa qué modo eligió el usuario para la acumulación. Al final de cada iteración se evalúa si la tarea se ha completado y en caso contrario el sistema se mantendra en el estado de ADD a menos que se cambie al estado 11 volviendo al estado inicial o que la tarea culmine exitosamente pasando al estado DONE, donde la señal del mismo nombre se activará devolviendo el sistema al estado IDLE.
-   * **Conclusiones**
+* **Conclusiones**
      *  Este diseño muestra la versatilidad de las máquinas de estados con rutas de datos. Pues mediante ellas es posible que un único hardware sea capaz de tener varios modos de operación basadas tanto en iteraciones fijas tales como sumar 3 o 4 veces, y operaciones dinámicas basadas en alcanzar cierta magnitud. Además la implementación de una máquina de estados Moore, donde las actualizaciones del registro acc dependen del estado actual y ocurren sincronizadas con el reloj, aisla las salidas de posibles ruidos o retardos lógicos que podrían presentarse con la variación de las entradas "x" o "mode".
      *  **Dificultades encontradas** En el planteamiento del diagrama de estados se buscó una manera de declarar un único estado ADD que implicitamente mediante algún componente de hardware tomara la decisión de qué tipo de acumulación realizar. Sin embargo para no complificar el entendimiento del diagrama se decidió dejar 3 estados ADD cada uno con su tipo de acumulación.
      *  **Importancia de la simulación en el diseño digital** ES necesario observar la simulación digital antes de la implementación de los algoritmos diseñados en cualquier placa de desarrollo, pues de esta manera se pueden detectar retardos lógicos o problemas con con la sincronización de los estados con los flancos de subida del reloj. Además permite validar de forma preliminar si los resultados mostrados por el sistema coinciden con los esperados. Finalmente, con la simulación también es posible analizar maneras de optimizar los sistemas y algoritmos diseñados antes de que se usen en la placa de desarrollo y de esta manera no consumir hardware innecesario, reduciendo consumo de energía y ahorrando tiempo de ejecución.
@@ -178,4 +168,5 @@ El desarrollo de este transmisor nos ayudó a entender la ventaja de separar la 
 Finalmente, como punto a mejorar para futuros diseños, nos dimos cuenta de que debimos incluir el diagrama de la máquina de estados (FSM) para la unidad de control, en lugar de poner únicamente el diagrama de flujo y el datapath. Esto no se añadio porque, al momento de hacer el ejercicio, en la clase magistral aún no se había profundizado en el tema de las máquinas algorítmicas (ASM), por lo que creíamos que el diagrama de flujo por sí solo era suficiente para documentar todo el sistema.
 
 ## Referencias
+* MÁQUINAS DE ESTADO ALGORÍTMICAS (ASM). IN: DISEÑO DE SISTEMAS DIGITALES. CIC, DM, KP. SPRINGER.
 
