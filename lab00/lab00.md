@@ -7,7 +7,7 @@
 
 - Miguel Esteban Beltrán Silva – 1025524635
 - Sebastián Camilo Ortegon Hernandez – 1014861874
-- Nombre completo – DNI
+- andres jacobo rojas gonzalez – 1025762831
 
 **Grupo de trabajo:**  
 **Semestre:** 2026-1  
