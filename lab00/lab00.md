@@ -172,7 +172,7 @@ El diseño del transmisor serial síncrono se estructuró separando claramente l
   * **Salidas:** Asignación combinacional continua donde las señales dependen exclusivamente del estado actual.
 * **Manejo de reloj y reset:** El sistema es completamente síncrono, operando en los flancos de subida del reloj (`posedge clk`). La señal de reinicio (`rst`) actúa de forma síncrona forzando el estado a `IDLE` y limpiando los registros y contadores de la ruta de datos.
 * **Comportamiento esperado del sistema:** La línea `tx` se mantiene estable en `1` lógico durante el reposo. Al iniciar una transmisión, emite los datos comenzando por el LSB, manteniendo cada bit el tiempo definido por `CLKS_PER_BIT`. La señal `busy` permanece en alto durante todo el proceso, y `done` emite un pulso exacto de un ciclo de reloj al finalizar el último bit.
-* **Código fuente del módulo:** [`src/serial_tx.v`](.../lab00/src/serial_tx.v)
+* **Código fuente del módulo:** [`src/serial_tx.v`](src/serial_tx.v)
 
 ---
 ## Simulaciones
@@ -182,7 +182,7 @@ El diseño del transmisor serial síncrono se estructuró separando claramente l
 Para validar el funcionamiento del transmisor serial, se diseñó un *testbench* que inyecta datos y señales de control para comprobar el correcto desplazamiento y temporización de los bits.
 
 * **Descripción del testbench:** Se configuró un reloj de 100MHz (periodo de 10ns) y se aplicó un reinicio síncrono inicial (`rst=1`). Posteriormente, se realizaron dos pruebas de transmisión secuenciales enviando los valores hexadecimales `0xA5` (binario: `10100101`) y `0x3C` (binario: `00111100`). En ambas pruebas, la transmisión se activa mediante un pulso de un ciclo en la señal `start`, esperando a que la señal `done` se active antes de proceder con el siguiente dato.
-* **Código del testbench:** [`src/serial_tx_tb.v`](../src/serial_tx_tb.v)
+* **Código del testbench:** [`src/serial_tx_tb.v`](src/serial_tx_tb.v)
 * **Señales observadas:** 
   * `tx`: Transmite los bits de manera serial iniciando desde el bit menos significativo (LSB).
   * `busy`: Pasa a nivel alto al recibir la señal `start` y se mantiene así durante toda la ráfaga de transmisión.
