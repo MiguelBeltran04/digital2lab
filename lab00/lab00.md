@@ -32,6 +32,8 @@ Para este ejercicio se decidió realizar una Maquina de estados de Moore en la c
   * **S0** Estado en el que el semaforo esta en verde (La simulación siempre iniciara ene ste estado).
   * **S1** En este estado, el semaforo tiene la luz amarilla activa
   * **S2** En este estado el semáforo tiene la luz roja encendida
+ 
+* **Funcionamiento del sistema**
 
 El sistema funciona de la siguiente manera: cada flanco de subida del clock hará que la maquina se mantenga en el mismo estado hasta que se llegue a un punto en donde la variable "contador" llegue a cierto valor (En el caso del estado verde tiene que llegar a 4 para que en el siguiente flanco de subida del clock, el cual seria el quinto, este automáticamente cambie de estado, en el caso del amarillo será 1 y en el caso del rojo será el 3). Un ciclo de reloj después se va a pasar al siguiente estado tal y como se ve en la imagen.
 
@@ -66,17 +68,14 @@ Con respecto a "estado_actual" se evidencia como siempre cambia de estado correc
 
 ## Implementación
 
-El codigo se termino organizando en bloques, antes de estos se definieron cuales iban a ser las entradas, salidas, constantes y variables a implementar. Los dos primeros bloques muestran las acciones que tendrian ciertas variables una vez se aplique el reset, despues se coloco un bloque donde se muestra la implementación de los estados y finalmente uno donde se deja el funcionamiento de las salidas dependiendo del esatdo actual.
+El codigo se termino organizando en bloques y previo a esto se definieron cuales iban a ser las entradas, salidas, constantes y variables a implementar. Los dos primeros bloques muestran las acciones que tendrían ciertas variables una vez se aplique el reset, después se coloco un bloque donde se muestra la implementación de los estados y finalmente uno donde se deja el funcionamiento de las salidas dependiendo del estado actual.
 
-En el primero se define que si se activa el "rst" o si "reset_contador" es igual a 1 (En la imagen donde se muestra la grafica de "reset_contador" se ve que este se activa un ciclo de reloj antes, básicamente se hace para que la variable sea igual a 1 y cuando por ejemplo, en el estado verde se haya llegado al quinto flanco de subida, el contador se reinicie justo al cambiar al siguiente estado que seria el amarillo). También se define que le pasa a la variable "dirección" cuando se activa el "rst" (será igual a cero), cuando esta el "estado_actual" sea igual al estado S0 (también será igual a cero) y cuando este en el estado S2 (Cambiara a 1).
-
-En el bloque #2, se define que al activarse el "rst", el "estado_actual" sea S0, si no, constantemente se le asignara a "estado_actual" la variable "estado_siguiente".
-
-En el penultimo bloque, siempre se incia igualando "estado_actual" con "estado_siguiente" y con "reset_contador" en cero (Abajo del bloque se deja claro que estado actual tiene que ser si o si S0 por defecto). Posterior a esto una vez este en el Estado verde, se va a esperar a que "contador" sea mayor o igual a 4, se define cual sera el estado siguiente y se indica que se va a reiniciar el contador. Lo mismo pasa para los otros dos estados (En el caso del amarillo, se deja claro que dependiendo del valor de dirección, el siguiente estado sera el verde o el rojo).
-
-Al final, en el ultimo bloque se definen como van a ser las salidas dependiendo del estado ene el que se encuentre la maquina.
-
-
+* **Bloques definidos:**
+  * **1:** En el primero se define que si se activa el "rst" o si "reset_contador" es igual a 1 (En la imagen donde se muestra la grafica de "reset_contador" se ve que este se activa un ciclo de reloj antes, básicamente se hace para que la variable sea igual a 1 y cuando por ejemplo, en el estado verde se haya llegado al quinto flanco de subida, el contador se reinicie justo al cambiar al siguiente estado que seria el amarillo). También se define que le pasa a la variable "dirección" cuando se activa el "rst" (será igual a cero), cuando esta el "estado_actual" sea igual al estado S0 (también será igual a cero) y cuando este en el estado S2 (Cambiara a 1).
+  * **2:** En el bloque #2 se define que al activarse el "rst", el "estado_actual" sea S0, si no, constantemente se le asignara a "estado_actual" la variable "estado_siguiente".
+  * **3:** En el penultimo bloque, siempre se incia igualando "estado_actual" con "estado_siguiente" y con "reset_contador" en cero (Abajo del bloque se deja claro que estado actual tiene que ser si o si S0 por defecto). Posterior a esto una vez este en el Estado verde, se va a esperar a que "contador" sea mayor o igual a 4, se define cual sera el estado siguiente y se indica que se va a reiniciar el contador. Lo mismo pasa para los otros dos estados (En el caso del amarillo, se deja claro que dependiendo del valor de dirección, el siguiente estado sera el verde o el rojo).
+  * **3:** En el ultimo bloque se definen como van a ser las salidas dependiendo del estado ene el que se encuentre la maquina.
+  
 ## Conclusiones
 
 ### Ejercicio #1
