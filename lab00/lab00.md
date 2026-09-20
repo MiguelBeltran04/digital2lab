@@ -35,18 +35,6 @@ En el momento en el que la maquina se encuentre en el estado S1, esta tiene que 
 
 <img width="1600" height="666" alt="WhatsApp Image 2026-09-15 at 8 43 53 PM" src="https://github.com/user-attachments/assets/f7d483d4-c7a3-4b5c-b087-eeaf162ca84d" />
 
-
-Describa brevemente los diseños realizados en el laboratorio.
-
-Incluya:
-- Tipo de sistema (FSM, FSM + datapath).
-- Estados definidos.
-- Funcionamiento general del sistema.
-
-Cuando aplique, incluya el diagrama de la máquina de estados.
-
----
-
 ## Simulaciones
 
 ### Ejercicio #1
@@ -119,9 +107,46 @@ Dentro de las dificultades encontradas, se encuentran el diseño del diagrama de
 
 ---
 
-## Diseño implementado
+## Diseño implementado Ejercicio #2
+* **Tipo de sistema:** SE trata de un acumulador secuencial controlado por una máquina de estados finitos con datapath. Esta además de gestionar la lógica de los estados, también incorpora elementos del procesamiento de datos tales como el uso de contadores, comparadores de magnitudes, registros de almacenamiento y la ejecución de operaciones aritméticas.
 
-### Ejercicio #3
+* **Estados definidos:**
+  * **IDLE** Estado inicial donde el sistema se mantiene en espera de ser activado por una señal de ¨start¨ que provoca una transición al estado ¨LOAD¨
+  * **LOAD** En este estado, se reinicia el registro y el contador se inicializa en 0.
+  * **ADD** EN este estado se realiza la acumulación sumando el valor de entrada "x" dependiendo de la configuración de la entrada "mode" donde:
+    * **mode = 2´b00** Suma 3 veces el valor de entrada
+    * **mode = 2´b01** Suma 4 veces el valor de entrada
+    * **mode = 2´b10** Suma hasta que el registro sea igual o mayor a 20
+    * **mode = 2´b11** Cancela la acumulación y devuelve al estado IDLE.
+  * **DONE** Cuando el sistema termina de realizar la acumulación y el resultado esta listo, este estado activa la señal "done" la cuál indica que la operación ha culminado. En el siguiente ciclo de reloj se regresa al estado "IDLE"
+  
+* **Funcionamiento general:** La construcción del módulo secAcc funciona como un acumulador secuencial regido por una señal de reloj y un reinicio asíncrono. Su proposito es recibir un dato de entrada de 4 bits y sumarlo repetidas veces dependiendo del modo en el que se configure la entrada. Una vez que el sistema detecta el pulso de "start" el sistema limpia los registros internos, carga los valores de entrada, el modo y luego inicializa el contador en 0. Este diseño permite realizar diferentes tipos de acumulaciones sumando 3 o 4 veces la entrada o acumulando hasta que el registro tenga un valor igual o mayor a 20. ES posible además interrumpir la acumulación en cualquier momento configurando la entrada mode en 2'b11.
+<img width="500" height="500" alt="acumulador" src="https://github.com/user-attachments/assets/4cbead75-ee56-4fdb-8502-ca6a3fbd1802" />
+
+* **Simulaciones:** El testbench realizado para este módulo comienza con la activación de un reset en la primera señal de reloj. Luego se establece el modo en 2´b00 para probar que el contador funciona y que la transición de estados es correcta.
+  * **Prueba #1** Luego de 5 ciclos de reloj se define un valor de entrada x=5 y se mantiene el modo 00. Se esperan 5 ciclos de reloj para observar el resultado del algoritmo y ver la activación de la señal de done.
+  * **Prueba #2** Se define la entrada x=11 y el modo 01 para probar la acumulación por 4 veces. SE activa la señal de start durante 1 pulso de reloj y luego se esperan 5 pulsos hasta ver la activacón de la señal de done.
+  * **Prueba #3** Se define la entrada x=2 y el modo 10. El proposito de usar un número pequeño consiste en observar si el estado de add es capaz de mantenerse durante más de 4 o 5 iteraciones.
+  * **Prueba #4** Se define la entrada x=12 y el modo 00. Se esperan 2 ciclos de reloj y luego se cambia el estado al modo 11. El objetivo es observar el comportamiento al cancelar la acumulación. Acto seguido, se activa la señal de start nuevamente y al mismo tiempo se cambia el modo a 00.
+<img width="1900" height="300" alt="image" src="https://github.com/user-attachments/assets/4a5aca48-681a-411e-b16e-39e22588c31d" />
+
+  * **Resultados** La prueba #0 culmina exitosamente, se observa que cuando el contador llega a 3 iteraciones el sistema pasa al estado done y regresa al inicio. El contador se reinicia una vez que se activa un nuevo pulso de start, dejando los registros limpios para la siguiente prueba.
+    * En la prueba #1 con un valor esperado de 15 la prueba culmina perfectamente manteniendo el modo 00 y realizando 3 acumulaciones de x=5. Un ciclo de reloj después se observa que al activar un pulso de start tanto el contador como el registro "acc" queda en 0 y listo para la siguiente prueba.
+    * La prueba #2 con el modo 01 y x=11 muestra en el registro un valor de 44 para cuando la señal de done se activa, lo cual cumple el comportamiento esperado y además permite observar que la transición al estado done se dió cuando el contador llego a 4 iteraciones.
+    * Para la prueba #3 con el modo 10 y una entrada de x=2 se observa que no fue necesario el uso del contador y que el comparador cumplió su funcion de transicionar al estado done una vez que el acumulador alcanzó el valor de 20; Esto demuestra que el estado de add pudo mantenerse durante 10 iteraciones hasta alcanzar su objetivo y terminar la prueba exitosamente.
+    * Para la prueba #4 una vez pasados los 2 ciclos de reloj del modo 00 con x=12 y aplicado el modo 11 para la cancelación, esta se comportó como estaba previsto, devolviendo al estado idle y manteniendo a la espera del pulso de start. Cuando el pulso de start fue aplicado, el contador y el registro se reiniciaron y continuaron su funcionamiento normal.
+* **implementación**
+   * **organización del código** SE trabajó con un único módulo estructurado de manera secuencial y de modo que integre todas las operaciones aritméticas y comparaciones necesarias en un solo archivo. En la cabecera se muestra el nombre del modulo y los puertos de entrada y salida, seguidos por la asignación de los 4 estados necesarios para el funcionamiento. Toda la lógica de control, incluyendo la ruta de datos, sumas, comparaciones y conteos está contenida dentro de un único bloque "always" y el flujo se gestiona utilizando estructuras "case" para evaluar el estado siguiente dependiendo del estado actual. El estado se encuentra guardado en el registro ¨STATE´. Además una subestructura case se encarga de evaluar qué tipo de acumulación se va a realizar y de esta manera se elige qué versión del estado add se va a utilizar.
+   * **Manejo de reloj y reset**
+      * **Reset (rst)** Al inicio del bloque always se deine la lógica secuencial por flancos. Al declarar ¨posedge clk or posedge rst¨ se garantiza que el sistema responda inmediatamente a una señal de reinicio sin necesidad de que el reloj cambie. Esto provoca que el reset sea asíncrono. Una vez activado, el sistema regresa al estado IDLE
+      * **Reloj (clk)** Dentro del bloque always se declara un bloque principal ¨begin¨ la cual en ausencia de un reset se realizan todas las transiciones de estado de forma totalmente síncrona con el flanco de subida de la señal.
+   * **Comportamiento esperado del sistema** El sistema debe esperar en el estado IDLE manteniendo la señal de done en 0. Si se activa la señal de start, se pasará al estado de LOAD, donde se delcara el registro acumulador en 0 y el contador inicia en 0 para luego pasar al estado de ADD. Durante el estado ADD un bloque case evalúa qué modo eligió el usuario para la acumulación. Al final de cada iteración se evalúa si la tarea se ha completado y en caso contrario el sistema se mantendra en el estado de ADD a menos que se cambie al estado 11 volviendo al estado inicial o que la tarea culmine exitosamente pasando al estado DONE, donde la señal del mismo nombre se activará devolviendo el sistema al estado IDLE.
+   * **Conclusiones**
+     *  Este diseño muestra la versatilidad de las máquinas de estados con rutas de datos. Pues mediante ellas es posible que un único hardware sea capaz de tener varios modos de operación basadas tanto en iteraciones fijas tales como sumar 3 o 4 veces, y operaciones dinámicas basadas en alcanzar cierta magnitud. Además la implementación de una máquina de estados Moore, donde las actualizaciones del registro acc dependen del estado actual y ocurren sincronizadas con el reloj, aisla las salidas de posibles ruidos o retardos lógicos que podrían presentarse con la variación de las entradas "x" o "mode".
+     *  **Dificultades encontradas** En el planteamiento del diagrama de estados se buscó una manera de declarar un único estado ADD que implicitamente mediante algún componente de hardware tomara la decisión de qué tipo de acumulación realizar. Sin embargo para no complificar el entendimiento del diagrama se decidió dejar 3 estados ADD cada uno con su tipo de acumulación.
+     *  **Importancia de la simulación en el diseño digital** ES necesario observar la simulación digital antes de la implementación de los algoritmos diseñados en cualquier placa de desarrollo, pues de esta manera se pueden detectar retardos lógicos o problemas con con la sincronización de los estados con los flancos de subida del reloj. Además permite validar de forma preliminar si los resultados mostrados por el sistema coinciden con los esperados. Finalmente, con la simulación también es posible analizar maneras de optimizar los sistemas y algoritmos diseñados antes de que se usen en la placa de desarrollo y de esta manera no consumir hardware innecesario, reduciendo consumo de energía y ahorrando tiempo de ejecución.
+
+## Diseño implementado Ejercicio #3
 
 El diseño consiste en un transmisor serial síncrono de 8 bits controlado por una máquina de estados algorítmica (ASM). Su función principal es recibir un byte en paralelo, serializarlo (enviando el bit menos significativo primero) y controlar con precisión la duración de cada bit en la línea de transmisión utilizando contadores internos.
 
@@ -129,7 +154,7 @@ El diseño consiste en un transmisor serial síncrono de 8 bits controlado por u
 * **Pasos/Etapas del flujo:** IDLE, LOAD, BIT_HOLD, SHIFT_NEXT, DONE_ST
 * **Funcionamiento general:** El sistema reposa en `IDLE` hasta recibir la señal `start`. En `LOAD`, captura el dato de entrada y inicializa los contadores. Durante `BIT_HOLD`, expone el bit actual en la salida `tx` y espera el tiempo parametrizado (`CLKS_PER_BIT - 2`). En `SHIFT_NEXT`, desplaza el registro para preparar el siguiente bit y aumenta el contador de bits enviados. Tras procesar los 8 bits, pasa a `DONE_ST`, activa la bandera `done` por un ciclo y retorna al inicio.
 
-<img width="2184" height="3859" alt="_Diagrama algoritmico ej3" src="https://github.com/user-attachments/assets/955f3a62-3de7-4c5d-ba02-fc44b2917ab7" />
+<img width="300" height="600" alt="_Diagrama algoritmico ej3" src="https://github.com/user-attachments/assets/955f3a62-3de7-4c5d-ba02-fc44b2917ab7" />
 
 
 ---
