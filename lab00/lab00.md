@@ -49,12 +49,6 @@ En el caso de "contador", vemos que esta opera correctamente, reiniciandose en e
 
 Con respecto a "estado_actual" se evidencia como siempre cambia de estado correctamente, y a la vez cambia la salida. Mientras que "estado_siguietne" un ciclo de reloj antes deja definido ese estado al que necesita pasar una vez se termine ese ciclo de reloj (En la sección de implementación se explicara con mayor profundidad)
 
-Describa las simulaciones realizadas para verificar el funcionamiento del diseño.
-
-Incluya:
-- Descripción del testbench.
-- Señales observadas.
-- Resultados obtenidos.
 
 ### Evidencias
 
@@ -80,18 +74,6 @@ En el penultimo bloque, siempre se incia igualando "estado_actual" con "estado_s
 Al final, en el ultimo bloque se definen como van a ser las salidas dependiendo del estado ene el que se encuentre la maquina.
 
 
-
-Explique cómo se implementó el diseño en Verilog.
-
-Incluya:
-- Organización del código.
-- Manejo de reloj y reset.
-- Comportamiento esperado del sistema.
-
-> El código fuente debe encontrarse en la carpeta `src/`.
-
----
-
 ## Conclusiones
 
 ### Ejercicio #1
@@ -100,12 +82,6 @@ En este ejercicio se logro realizar una maquina de estado de Moore y se logro im
 
 Dentro de las dificultades encontradas, se encuentran el diseño del diagrama de Estados, ya que con base en este se realiza todo el codigo y se tiene que dejar muy en claro bajo que entradas o variables se van a realizar los cambios de Estados y así evitar bucles infinitos o transiciones no deseadas.
 
-
-- Principales aprendizajes del laboratorio.
-- Dificultades encontradas.
-- Importancia de la simulación en el diseño digital.
-
----
 
 ## Diseño implementado Ejercicio #2
 * **Tipo de sistema:** SE trata de un acumulador secuencial controlado por una máquina de estados finitos con datapath. Esta además de gestionar la lógica de los estados, también incorpora elementos del procesamiento de datos tales como el uso de contadores, comparadores de magnitudes, registros de almacenamiento y la ejecución de operaciones aritméticas.
