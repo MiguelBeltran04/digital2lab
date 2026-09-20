@@ -41,17 +41,15 @@ En el momento en el que la maquina se encuentre en el estado S1, esta tiene que 
 <img width="1600" height="666" alt="WhatsApp Image 2026-09-15 at 8 43 53 PM" src="https://github.com/user-attachments/assets/f7d483d4-c7a3-4b5c-b087-eeaf162ca84d" />
 
 ## Simulaciones
-
+* **Explicación código testbench:**
 En primer lugar en el testbench se encuentran las señales de entrada las cuales son "clk" y "rst", las cuales terminaran siendo manejadas activamente por el testbench, se colocaron las tres salidas y luego se genero el clk, en este caso va a tener un medio ciclo de 5 ns ya que previamente se definió una escala de 1ns/1ns (De ahí a que coloque el #5), se definio el nombre del nuevo archivo generado, el cual se usara para guardar todos los datos y asi, poder ser usados por GTKWave a la hora de realizar las graficas. Por ultimo se deja en el codigo la activación del reset con una duración de 20 ns, pasado ese tiempo este sera igual a cero y se indica que luego de esos 20 ns, la simulación dure 300 ns mas.
 
 A continuación  se explicara el comportamiento de las señales observadas en GTKWave, iniciando por las salidas. Se puede evidenciar que la maquina arroja las salidas correctamente, ya que hace la secuencia "verde, amarillo, rojo" y "rojo, amarillo, verde" de forma constante y nunca se queda en un bucle (Es decir, no se queda en el mismo estado). 
 
-Se ve la presencia del rst, el cual deja practicamente a todas las señales en 0, y no es hasta que sea igual a cero para que el resto de señales se empiecen a activar. 
-
-En el caso de "contador", vemos que esta opera correctamente, reiniciandose en el momento en el que la maquina cambia de estados y asi volver a contar los flancos de subida para el estado enel que este presente. La variable "dirección" termina siendo igual a cero cuando pasa por ele stado S0 y 1 cuando pasa por S1.
-
-Con respecto a "estado_actual" se evidencia como siempre cambia de estado correctamente, y a la vez cambia la salida. Mientras que "estado_siguietne" un ciclo de reloj antes deja definido ese estado al que necesita pasar una vez se termine ese ciclo de reloj (En la sección de implementación se explicara con mayor profundidad)
-
+* **Funcionamiento variables empleadas:**
+  * **1:** Se ve la presencia del rst, el cual deja practicamente a todas las señales en 0, y no es hasta que sea igual a cero para que el resto de señales se empiecen a activar. 
+  * **2:** En el caso de "contador", vemos que esta opera correctamente, reiniciandose en el momento en el que la maquina cambia de estados y asi volver a contar los flancos de subida para el estado enel que este presente. La variable "dirección" termina siendo igual a cero cuando pasa por ele stado S0 y 1 cuando pasa por S1.
+  * **3:** Con respecto a "estado_actual" se evidencia como siempre cambia de estado correctamente, y a la vez cambia la salida. Mientras que "estado_siguietne" un ciclo de reloj antes deja definido ese estado al que necesita pasar una vez se termine ese ciclo de reloj (En la sección de implementación se explicara con mayor profundidad)
 
 ### Evidencias
 
@@ -69,7 +67,7 @@ El codigo se termino organizando en bloques y previo a esto se definieron cuales
   * **1:** En el primero se define que si se activa el "rst" o si "reset_contador" es igual a 1 (En la imagen donde se muestra la grafica de "reset_contador" se ve que este se activa un ciclo de reloj antes, básicamente se hace para que la variable sea igual a 1 y cuando por ejemplo, en el estado verde se haya llegado al quinto flanco de subida, el contador se reinicie justo al cambiar al siguiente estado que seria el amarillo). También se define que le pasa a la variable "dirección" cuando se activa el "rst" (será igual a cero), cuando esta el "estado_actual" sea igual al estado S0 (también será igual a cero) y cuando este en el estado S2 (Cambiara a 1).
   * **2:** En el bloque #2 se define que al activarse el "rst", el "estado_actual" sea S0, si no, constantemente se le asignara a "estado_actual" la variable "estado_siguiente".
   * **3:** En el penultimo bloque, siempre se incia igualando "estado_actual" con "estado_siguiente" y con "reset_contador" en cero (Abajo del bloque se deja claro que estado actual tiene que ser si o si S0 por defecto). Posterior a esto una vez este en el Estado verde, se va a esperar a que "contador" sea mayor o igual a 4, se define cual sera el estado siguiente y se indica que se va a reiniciar el contador. Lo mismo pasa para los otros dos estados (En el caso del amarillo, se deja claro que dependiendo del valor de dirección, el siguiente estado sera el verde o el rojo).
-  * **3:** En el ultimo bloque se definen como van a ser las salidas dependiendo del estado ene el que se encuentre la maquina.
+  * **4:** En el ultimo bloque se definen como van a ser las salidas dependiendo del estado ene el que se encuentre la maquina.
   
 ## Conclusiones
 
