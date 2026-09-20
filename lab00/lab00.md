@@ -172,7 +172,7 @@ El diseño del transmisor serial síncrono se estructuró separando claramente l
   * **Salidas:** Asignación combinacional continua donde las señales dependen exclusivamente del estado actual.
 * **Manejo de reloj y reset:** El sistema es completamente síncrono, operando en los flancos de subida del reloj (`posedge clk`). La señal de reinicio (`rst`) actúa de forma síncrona forzando el estado a `IDLE` y limpiando los registros y contadores de la ruta de datos.
 * **Comportamiento esperado del sistema:** La línea `tx` se mantiene estable en `1` lógico durante el reposo. Al iniciar una transmisión, emite los datos comenzando por el LSB, manteniendo cada bit el tiempo definido por `CLKS_PER_BIT`. La señal `busy` permanece en alto durante todo el proceso, y `done` emite un pulso exacto de un ciclo de reloj al finalizar el último bit.
-* **Código fuente del módulo:** [`src/serial_tx.v`](../src/serial_tx.v)
+* **Código fuente del módulo:** [`src/serial_tx.v`](.../lab00/src/serial_tx.v)
 
 ---
 ## Simulaciones
