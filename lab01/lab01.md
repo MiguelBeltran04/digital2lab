@@ -1,4 +1,4 @@
-# Laboratorio 00  
+# Laboratorio 01 
 ## Introducción a Verilog, Simulación y Máquinas de Estados Finitos (FSM)
 
 ---
