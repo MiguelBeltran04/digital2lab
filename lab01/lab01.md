@@ -64,8 +64,21 @@ En el caso de las salidas se definieron 4 leds verdes (Los cuales reflejaran el 
 <img width="1067" height="98" alt="image" src="https://github.com/user-attachments/assets/f82e3325-0bd5-496a-902a-89882394ee40" />
 
 * **implementación**
-  * **Entradas y salidas** : se definen las entradas y salidas previamente definidas, y teniendo el cuidado de **colocar correctamente el nombre de cada enrtada en cada pin del archivo .xdc**.
-  * 
+  * **Entradas y salidas** : se definen las entradas y salidas previamente definidas, y teniendo el cuidado de **colocar correctamente el nombre de cada entrada en cada pin del archivo .xdc** escribir correctamente el nombre de la variable en los pines a utilizar del .xdc
+  * **Captura de operandos** : En esta parte se definen dos buses de 4 bits cada uno para guardar los dos numeros (sw[3:0] y btn[3:0])
+  * **Operaciones logicas bit a bit** : 
+  * **Condición "todos los bits en 1"** : 
+  * **Definición suma de números** : Suma los valores de A y B previamente guardados (Si el numero resultante es mayor a 4 bits, el resultado conservara los 4 bits menos significativos e ignorara los valores mas significativas a partir de la quinta posición hacia la izquierda.
+  * **Lógica de btn[4] y btn [5]** : Se crea una variable procedural para ir guardando los distintos resultados y se define un **always @(*) begin** para que la FPGA ejecute uno de cuatro casos asignados (mantener el resultado, multiplicar por 2 ese resultado, negar todos los bits del resultado, y negar el resultado multiplicado por 2) dependiendo de los cambios de **btn[4], btn[5]** y **base_sum**. 
+  * **Asignación resultado a leds** : Ese resultado final se le asigna bit por bit a cada uno de los 4 leds que vienen en la FPGA.
+  * **Asignación al led RGB** :
+
+ * **Simulaciones**
+   * **Explicación del código tb** :En primer lugar se vuelven a definir entradas y salidas para el testbench y se instanciando lo definido en en el código principal. Luego se define el monitoreo y finalmente se definen los cambios en los **btn[4] y btn[5]** de 4 maneras distintas para los mismos dos operandos (A=3 y B=1). Por ultimo esos dos botones se desactivan y se hacen sumas con otros numeros (Para evidenciar que pasa con los leds cuando hay overflow y el comportamiento del led blanco).
+   * **Explicación resultados en GTKWave** : En primer lugar, se ve la suma de dos 3 y 1, la cual da como resultado el numero 4 (0100). Luego, al tener **btn[4] = 1** el resultado termina siendo el doble, o en este caso 8. En el caso de **btn[5] = 1**, se invierten los bits del resultado. Lo que termina dando en este caso 11 (1011). Por ultimo, el 8 en binario lo termina inviertiendo y pasa a ser un 7 (0111). Luego se evidencia la suma entre 15 y 2. Lo cual da 17 (10001) y precisamente la salida termina mostrando los 4 bits menos significativos del resultado.
+   <img width="1367" height="132" alt="image" src="https://github.com/user-attachments/assets/e060db04-b3f0-4c93-ae08-43af8aa1ede3" />
+
+ * 
 
 * **Tipo de sistema:** SE trata de un acumulador secuencial controlado por una máquina de estados finitos con datapath. Esta además de gestionar la lógica de los estados, también incorpora elementos del procesamiento de datos tales como el uso de contadores, comparadores de magnitudes, registros de almacenamiento y la ejecución de operaciones aritméticas.
 
