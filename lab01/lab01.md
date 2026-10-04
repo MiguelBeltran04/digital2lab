@@ -100,7 +100,7 @@ A continuación se usa la compuerta OR para verificar si los 4 bits de A o de B 
    <img width="1367" height="132" alt="image" src="https://github.com/user-attachments/assets/e060db04-b3f0-4c93-ae08-43af8aa1ede3" />
 
 * **Video demostrativo del funcionamiento**
-[![Demostración funcionamiento en FPGA del lab001](https://img.youtube.com/vi/ki_n_wmmhyc/0.jpg)](https://youtu.be/ki_n_wmmhyc)
+  [![Demostración funcionamiento en FPGA del lab001](https://img.youtube.com/vi/ki_n_wmmhyc/0.jpg)](https://youtu.be/ki_n_wmmhyc)
 * **Conclusiones**
 
 
