@@ -19,7 +19,7 @@
 
 ---
 
-## Simulaciones
+## Implementación
 
 - **Explicación código:** Para esta actividad de validación inicial (Smoke Test), el comportamiento se verificó directamente sobre el hardware real (FPGA Zybo Z7). el objetivo principal fue validar el proceso de síntesis, implementación, asignación de pines mediante el archivo `.xdc` y la carga exitosa del *bitstream*.
 
@@ -31,14 +31,8 @@
     * `led[1]`: Canal Verde (Pin `F17`).
     * `led[2]`: Canal Azul (Pin `M17`).
 
-### Evidencias
 
-<!-- Espacio reservado para el video o imágenes del funcionamiento en la FPGA -->
-[Inserta aquí el enlace o archivo del video/imagen del LED RGB en la Zybo Z7]
 
----
-
-## Implementación
 
 - **Bloques definidos:**
   * **1. Contador de tiempo / Divisor de frecuencia:** Bloque secuencial que incrementa en cada flanco de subida de `clk` hasta llegar a 320,000,000, punto en el que se reinicia a 0 para mantener la temporización del semáforo.
@@ -46,6 +40,13 @@
 
 * **Código fuente del módulo:** [`src/Semaforo.v`](src/Semaforo.v)
 * **Archivo de restricciones:** [`src/Zybo-Z7-Master.xdc`](src/Zybo-Z7-Master.xdc)
+
+
+### Evidencias
+
+<!-- Espacio reservado para el video o imágenes del funcionamiento en la FPGA -->
+[Inserta aquí el enlace o archivo del video/imagen del LED RGB en la Zybo Z7]
+
 
 ---
 
