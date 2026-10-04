@@ -15,21 +15,21 @@
 
 ## Verificación del entorno en FPGA Ejercicio #1
 
-- **Funcionamiento del sistema:** Este ejercicio (Smoke Test) sirve para verificar el funcionamiento básico de la tarjeta Zybo Z7 y la instalación del entorno Vivado[cite: 1, 2]. El sistema implementa un semáforo sencillo que utiliza un contador interno de 32 bits alimentado por el reloj de la tarjeta (125 MHz)[cite: 1, 2]. A medida que el contador incrementa, el sistema cambia progresivamente el estado del LED RGB #6 para alternar entre las luces de un semáforo tradicional: rojo (`3'b001`), amarillo (`3'b011`), verde (`3'b010`) y amarillo de nuevo (`3'b011`), completando el ciclo cada 320,000,000 de pulsos de reloj (aprox. 2.56 segundos)[cite: 1, 2].
+- **Funcionamiento del sistema:** Este ejercicio (Smoke Test) sirve para verificar el funcionamiento básico de la tarjeta Zybo Z7 y la instalación del entorno Vivado. El sistema implementa un semáforo sencillo que utiliza un contador interno de 32 bits alimentado por el reloj de la tarjeta (125 MHz). A medida que el contador incrementa, el sistema cambia progresivamente el estado del LED RGB #6 para alternar entre las luces de un semáforo tradicional: rojo (`3'b001`), amarillo (`3'b011`), verde (`3'b010`) y amarillo de nuevo (`3'b011`), completando el ciclo cada 320,000,000 de pulsos de reloj.
 
 ---
 
 ## Simulaciones
 
-- **Explicación código testbench:** Para esta actividad de validación inicial (Smoke Test), el comportamiento se verificó directamente sobre el hardware real (FPGA Zybo Z7)[cite: 1, 2]. Por este motivo no se incluye un archivo de simulación adicional, ya que el objetivo principal fue validar el proceso de síntesis, implementación, asignación de pines mediante el archivo `.xdc` y la carga exitosa del *bitstream* mediante JTAG[cite: 2].
+- **Explicación código:** Para esta actividad de validación inicial (Smoke Test), el comportamiento se verificó directamente sobre el hardware real (FPGA Zybo Z7). el objetivo principal fue validar el proceso de síntesis, implementación, asignación de pines mediante el archivo `.xdc` y la carga exitosa del *bitstream*.
 
 - **Funcionamiento variables empleadas:**
-  * **`clk`:** Señal de reloj principal de la tarjeta Zybo Z7 conectada al pin `K17` con una frecuencia de 125 MHz (periodo de 8.0 ns)[cite: 1, 2].
-  * **`counter`:** Variable entera de 32 bits empleada como divisor de frecuencia por software para contar los pulsos de reloj y generar los retardos entre cambios de color[cite: 1].
-  * **`led[2:0]`:** Vector de 3 bits conectado a las líneas del LED RGB #6 de la tarjeta[cite: 1, 2]:
-    * `led[0]`: Canal Rojo (Pin `V16`)[cite: 1, 2].
-    * `led[1]`: Canal Verde (Pin `F17`)[cite: 1, 2].
-    * `led[2]`: Canal Azul (Pin `M17`)[cite: 1, 2].
+  * **`clk`:** Señal de reloj principal de la tarjeta Zybo Z7 conectada al pin `K17` con una frecuencia de 125 MHz (periodo de 8.0 ns).
+  * **`counter`:** Variable entera de 32 bits empleada como divisor de frecuencia por software para contar los pulsos de reloj y generar los retardos entre cambios de color.
+  * **`led[2:0]`:** Vector de 3 bits conectado a las líneas del LED RGB #6 de la tarjeta:
+    * `led[0]`: Canal Rojo (Pin `V16`).
+    * `led[1]`: Canal Verde (Pin `F17`).
+    * `led[2]`: Canal Azul (Pin `M17`).
 
 ### Evidencias
 
@@ -41,8 +41,8 @@
 ## Implementación
 
 - **Bloques definidos:**
-  * **1. Contador de tiempo / Divisor de frecuencia:** Bloque secuencial que incrementa en cada flanco de subida de `clk` hasta llegar a 320,000,000, punto en el que se reinicia a 0 para mantener la temporización del semáforo[cite: 1].
-  * **2. Control del LED RGB (Lógica de estados):** Bloque secuencial que evalúa el valor acumulado en `counter` y asigna las combinaciones de bits a `led[2:0]` para proyectar el color adecuado en cada etapa[cite: 1].
+  * **1. Contador de tiempo / Divisor de frecuencia:** Bloque secuencial que incrementa en cada flanco de subida de `clk` hasta llegar a 320,000,000, punto en el que se reinicia a 0 para mantener la temporización del semáforo.
+  * **2. Control del LED RGB (Lógica de estados):** Bloque secuencial que evalúa el valor acumulado en `counter` y asigna las combinaciones de bits a `led[2:0]` para proyectar el color adecuado en cada etapa.
 
 * **Código fuente del módulo:** [`src/Semaforo.v`](src/Semaforo.v)
 * **Archivo de restricciones:** [`src/Zybo-Z7-Master.xdc`](src/Zybo-Z7-Master.xdc)
