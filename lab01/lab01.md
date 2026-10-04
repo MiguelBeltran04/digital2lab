@@ -21,7 +21,7 @@
 
 ## Implementación
 
-- **Explicación código:** Para esta actividad de validación inicial (Smoke Test), el comportamiento se verificó directamente sobre el hardware real (FPGA Zybo Z7). el objetivo principal fue validar el proceso de síntesis, implementación, asignación de pines mediante el archivo `.xdc` y la carga exitosa del *bitstream*.
+- **Explicación código:** Para esta actividad de validación inicial (Smoke Test), el comportamiento se verificó directamente sobre el hardware real (FPGA Zybo Z7). El objetivo principal fue validar el proceso de síntesis, implementación, asignación de pines mediante el archivo `.xdc` y la carga exitosa del *bitstream*.
 
 - **Funcionamiento variables empleadas:**
   * **`clk`:** Señal de reloj principal de la tarjeta Zybo Z7 conectada al pin `K17` con una frecuencia de 125 MHz (periodo de 8.0 ns).
@@ -45,7 +45,11 @@
 ### Evidencias
 
 <!-- Espacio reservado para el video o imágenes del funcionamiento en la FPGA -->
-[Inserta aquí el enlace o archivo del video/imagen del LED RGB en la Zybo Z7]
+
+
+https://github.com/user-attachments/assets/19b5d470-90f0-46c6-aab4-b64bdd4be9a0
+
+
 
 
 ---
