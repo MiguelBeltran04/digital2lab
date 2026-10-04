@@ -38,8 +38,8 @@
   * **1. Contador de tiempo / Divisor de frecuencia:** Bloque secuencial que incrementa en cada flanco de subida de `clk` hasta llegar a 320,000,000, punto en el que se reinicia a 0 para mantener la temporización del semáforo.
   * **2. Control del LED RGB (Lógica de estados):** Bloque secuencial que evalúa el valor acumulado en `counter` y asigna las combinaciones de bits a `led[2:0]` para proyectar el color adecuado en cada etapa.
 
-* **Código fuente del módulo:** [`src/Semaforo.v`](src/Semaforo.v)
-* **Archivo de restricciones:** [`src/Zybo-Z7-Master.xdc`](src/Zybo-Z7-Master.xdc)
+- **Código fuente del módulo:** [`src/semaforo.v`](src/semaforo.v)
+- **Archivo de restricciones:** [`src/Zybo-Z7.xdc`](src/Zybo-Z7.xdc)
 
 
 ### Evidencias
