@@ -39,8 +39,6 @@
   * **2. Control del LED RGB (Lógica de estados):** Bloque secuencial que evalúa el valor acumulado en `counter` y asigna las combinaciones de bits a `led[2:0]` para proyectar el color adecuado en cada etapa.
 
 - **Código fuente del módulo:** [`src/semaforo.v`](src/semaforo.v)
-- **Archivo de restricciones:** [`src/Zybo-Z7.xdc`](src/Zybo-Z7.xdc)
-
 
 ### Evidencias
 
