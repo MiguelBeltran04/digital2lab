@@ -75,12 +75,22 @@ En el caso de las salidas se definieron 4 leds verdes (Los cuales reflejaran el 
 * **implementación**
   * **Entradas y salidas** : se definen las entradas y salidas previamente definidas, y teniendo el cuidado de **colocar correctamente el nombre de cada entrada en cada pin del archivo .xdc** escribir correctamente el nombre de la variable en los pines a utilizar del .xdc
   * **Captura de operandos** : En esta parte se definen dos buses de 4 bits cada uno para guardar los dos numeros (sw[3:0] y btn[3:0])
-  * **Operaciones logicas bit a bit** : 
-  * **Condición "todos los bits en 1"** : 
+  * **Operaciones lógicas bit a bit** : En esta parte del código se implementan las compuertas AND y XOR exigidas en el diseño:
+    *  **compuerta AND**: La forma de uso es comparar primero el operando A y el operando B mediante el operador binario de verilog "&". De esta manera se compara individualmente cada bit de A y B donde el bit[i] de "and_result" será 1 en caso de que los bits de A y B que están en 1 sean iguales.
+    * **compuerta XOR**: Se implementa un XOR bit a bit usando el operador binario "^". De esta manera, el bit "i" de "xor_result" será 1 si los bits de A y B son diferentes y será 0 si los bits son iguales.
+  * **Condición "todos los bits en 1"** : En esta parte del código se combina la operación AND y OR, dando cumplimiento al uso de todas las compuertas pedidas en el diseño. El proposito de esta parte del código es verificar si todos los bits de A o B o de ambos operandos son 1. La forma de hacerlo es primero hacer un "AND de reducción". En verilog esto equivale a colocar el operador "&" frente a un solo vector que tiene las posiciones de los bits del operando (Ejemplo: (&operand_a)). De esta forma, se realiza un AND entre todos los bits internos del bus y devuelve un único bit que es 1 si todos los 4 bits del bus son 1. Esto se realiza tanto para el operando A como para el operando B.
+A continuación se usa la compuerta OR para verificar si los 4 bits de A o de B o ambos son 1. En tal caso, devuelve un 1 lógico. El resultado sale por un bus de datos llamado "all_ones"
   * **Definición suma de números** : Suma los valores de A y B previamente guardados (Si el numero resultante es mayor a 4 bits, el resultado conservara los 4 bits menos significativos e ignorara los valores mas significativas a partir de la quinta posición hacia la izquierda.
   * **Lógica de btn[4] y btn [5]** : Se crea una variable procedural para ir guardando los distintos resultados y se define un **always @(*) begin** para que la FPGA ejecute uno de cuatro casos asignados (mantener el resultado, multiplicar por 2 ese resultado, negar todos los bits del resultado, y negar el resultado multiplicado por 2) dependiendo de los cambios de **btn[4], btn[5]** y **base_sum**. 
   * **Asignación resultado a leds** : Ese resultado final se le asigna bit por bit a cada uno de los 4 leds que vienen en la FPGA.
-  * **Asignación al led RGB** :
+  * **Asignación al led RGB** :El uso que se decidió darle al led RGB es indicar si se cumplen diferentes condiciones usando compuertas lógicas:
+    * **Canal Rojo**: Este led se enciende en caso de que A y B compartan al menos 1 bit en 1. Esto no implica que necesariamente los bits de A y B sean exactamente iguales. Para lograrlo se utiliza un "OR de reducción" implementado de la misma manera que el "AND de reducción".
+    *  **Canal verde**: Este led enciende en caso de que A y B sean identicos o en caso de que "all_ones" sea 1. Para lograrlo, se usa el operador de igualdad binaria para verificar que todos los bits de A sean exactamente iguales a los de B.
+    *   **Canal azul**: Este canal enciende si A y B son diferentes en al menos 1 bit o si "all_ones" es 1. Se utiliza un OR de reducción a "XOR_result" pues, como la operación XOR da 1 únicamente en las posiciones donde A y B son diferentes entonces aplicar un OR devuelve un 1 si existe al menos una diferencia entre A y B.
+    *   **Combinaciones visuales**: Dado el comportamiento de los canales es posible observar los siguientes colores adicionales en el led RGB:
+      * **Amarillo**: Ocurre cuando A y B son iguales y distintos de 0, ya que se cumple la condición del canal verde de que A y B son iguales y también la condición del canal rojo ya que comparten al menos 1 bit en 1.
+      * **Morado**: Ocurre cuando A y B son diferentes pero comparten al menos 1 bit en 1. Por ejemplo, A=0101 y B=0110
+      * **Blanco**: Es de notar que en el código se hace un OR con "all_ones" a la operación principal de cada canal del led RGB. Esto tiene el objetivo de que el color blanco se muestre si todos los bits de A y B son 1 y es la forma de visualizar que el resultado de "all_ones" es correcto.  
 
  * **Simulaciones**
    * **Explicación del código tb** : En primer lugar se vuelven a definir entradas y salidas para el testbench y se instanciando lo definido en en el código principal. Luego se define el monitoreo y finalmente se definen los cambios en los **btn[4] y btn[5]** de 4 maneras distintas para los mismos dos operandos (A=3 y B=1). Por ultimo esos dos botones se desactivan y se hacen sumas con otros numeros (Para evidenciar que pasa con los leds cuando hay overflow y el comportamiento del led blanco).
@@ -89,8 +99,8 @@ En el caso de las salidas se definieron 4 leds verdes (Los cuales reflejaran el 
   
    <img width="1367" height="132" alt="image" src="https://github.com/user-attachments/assets/e060db04-b3f0-4c93-ae08-43af8aa1ede3" />
 
-
-
+* **Video demostrativo del funcionamiento**
+[![Demostración funcionamiento en FPGA del lab001](https://img.youtube.com/vi/ki_n_wmmhyc/0.jpg)](https://youtu.be/ki_n_wmmhyc)
 * **Conclusiones**
 
 
