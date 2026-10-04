@@ -94,10 +94,12 @@ A continuación se usa la compuerta OR para verificar si los 4 bits de A o de B 
 
  * **Simulaciones**
    * **Explicación del código tb** : En primer lugar se vuelven a definir entradas y salidas para el testbench y se instanciando lo definido en en el código principal. Luego se define el monitoreo y finalmente se definen los cambios en los **btn[4] y btn[5]** de 4 maneras distintas para los mismos dos operandos (A=3 y B=1). Por ultimo esos dos botones se desactivan y se hacen sumas con otros numeros (Para evidenciar que pasa con los leds cuando hay overflow y el comportamiento del led blanco).
-   * **Explicación resultados de suma y switches adicionales en GTKWave** : En primer lugar, se ve la suma de dos 3 y 1, la cual da como resultado el numero 4 (0100). Luego, al tener **btn[4] = 1** el resultado termina siendo el doble, o en este caso 8 (1000). En el caso de **btn[5] = 1**, se invierten los bits del resultado. Lo que termina dando en este caso 11 (1011). Por ultimo, el 8 en binario lo termina invirtiendo y pasa a ser un 7 (0111). Luego se evidencia la suma entre 15 y 2. Lo cual da 17 (10001) y precisamente la salida termina mostrando los 4 bits menos significativos del resultado.
+   * **Explicación resultados de suma y switches adicionales en GTKWave** : En primer lugar, se ve la suma de 3 y 1, la cual da como resultado el numero 4 (0100). Luego, al tener **btn[4] = 1** el resultado termina siendo el doble, o en este caso 8 (1000). En el caso de **btn[5] = 1**, se invierten los bits del resultado. Lo que termina dando en este caso 11 (1011). Por ultimo, el 8 en binario lo termina invirtiendo y pasa a ser un 7 (0111). Luego se evidencia la suma entre 15 y 2. Lo cual da 17 (10001) y precisamente la salida termina mostrando los 4 bits menos significativos del resultado.
+   * **Compuertas lógicas**: Durante los primeros 40 ns de la simulación se observa que las compuertas reaccionan únicamente a los bits de "operand_a" y "operand_b" por lo que los cambios realizados por btn[4] y btn[5] no afectan el resultado de las compuertas. En esta primera prueba con **operand_a=0011** y **operand_b=0001** se observa que la compuerta AND detecta similitudes en la posición [0] de A y B. En cuanto a la compuerta XOR solo se activa si solo únicamente uno de los 2 operandos tiene un 1 en alguna posición. en ese caso fue en la posición [1]. Además reaccionan los leds rojo y azul porque hay bits diferentes que comparten al menos 1 bit. Con **operand_b=0011** y **operand_a=0011** se ve que la compuerta AND encontró similitudes en las posiciones [0] y [1] encendiendo el led verde junto con el led rojo pues ambos numeros son iguales. Con **operand_a=1111** y **operand_a=0010** vemos que a compuerta AND solo encontró similitudes en la posición [1] mientras que la XOR forma el vector 1101. Como en este caso todos los bits de "operand_a" son 1 entonces se cumple la condición "all_ones" activando todos los leds para formar el color blanco. Lo mismo sucede para la siguiente prueba pues todos los bits de "operand_b" son 1 encendiendo todos los leds y activando la condición de "all_ones" a pesar de que el "operand_a" no tiene todos sus bits en 1. En la última prueba como todos los bits son 0 el único led que enciende es el verde porque ambos operandos son iguales, sin embargo como no hay unos en ninguna posición tanto las compuertas como los demás leds permanecen apagados.
   
   
-   <img width="1367" height="132" alt="image" src="https://github.com/user-attachments/assets/e060db04-b3f0-4c93-ae08-43af8aa1ede3" />
+<img width="2000" height="350" alt="image" src="https://github.com/user-attachments/assets/5284c526-8f5f-40f4-bfc9-49e88fe9ccb3" />
+
 
 * **Video demostrativo del funcionamiento**
 
@@ -105,6 +107,9 @@ A continuación se usa la compuerta OR para verificar si los 4 bits de A o de B 
 
 
 * **Conclusiones**
+  * Se logró diseñar e implementar con éxito una ALU elemental que es capaz de sumar dos operandos de 4 bits, multiplicar el resultado por 2 y además realizar operaciones lógicas elementales usando compuertas AND, OR, XOR y mostrar el resultado de las operaciones en binario mediante leds. Todo esto estructurado mediante bloques procedimentales **always@(*)** y sentencias **case**. Esto permitió alternar entre los distintos modos de operación.
+  * Se comprobó el correcto funcionamiento de la FPGA y de la instanciación de hardware externo mediante el archivo XDC. Pues los conmutadores de modos de operación (btn[5], btn[6]) respondieron de manera correcta a su uso experimental en el laboratorio.
+  * Tanto en la simulación como en el comportamiento físico se verificó el manejo del ancho de bus físico fijo de 4 bits establecido en verilog. Pues al sumar operandos cuyo resultado superaba el rango representable de 4 bits (un bit por led) el sistema conservó únicamente los 4 bits menos significativos. 
 
 
 
