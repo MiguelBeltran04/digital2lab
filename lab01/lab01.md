@@ -15,36 +15,50 @@
 
 ## Verificación del entorno en FPGA Ejercicio #1
 
+- **Funcionamiento del sistema:** Este ejercicio (Smoke Test) sirve para verificar el funcionamiento básico de la tarjeta Zybo Z7 y la instalación del entorno Vivado. El sistema implementa un semáforo sencillo que utiliza un contador interno de 32 bits alimentado por el reloj de la tarjeta (125 MHz). A medida que el contador incrementa, el sistema cambia progresivamente el estado del LED RGB #6 para alternar entre las luces de un semáforo tradicional: rojo (`3'b001`), amarillo (`3'b011`), verde (`3'b010`) y amarillo de nuevo (`3'b011`), completando el ciclo cada 320,000,000 de pulsos de reloj.
+
+---
+
+## Implementación
+
+- **Explicación código:** Para esta actividad de validación inicial (Smoke Test), el comportamiento se verificó directamente sobre el hardware real (FPGA Zybo Z7). El objetivo principal fue validar el proceso de síntesis, implementación, asignación de pines mediante el archivo `.xdc` y la carga exitosa del *bitstream*.
+
+- **Funcionamiento variables empleadas:**
+  * **`clk`:** Señal de reloj principal de la tarjeta Zybo Z7 conectada al pin `K17` con una frecuencia de 125 MHz (periodo de 8.0 ns).
+  * **`counter`:** Variable entera de 32 bits empleada como divisor de frecuencia por software para contar los pulsos de reloj y generar los retardos entre cambios de color.
+  * **`led[2:0]`:** Vector de 3 bits conectado a las líneas del LED RGB #6 de la tarjeta:
+    * `led[0]`: Canal Rojo (Pin `V16`).
+    * `led[1]`: Canal Verde (Pin `F17`).
+    * `led[2]`: Canal Azul (Pin `M17`).
 
 
- 
-* **Funcionamiento del sistema**
 
 
+- **Bloques definidos:**
+  * **1. Contador de tiempo / Divisor de frecuencia:** Bloque secuencial que incrementa en cada flanco de subida de `clk` hasta llegar a 320,000,000, punto en el que se reinicia a 0 para mantener la temporización del semáforo.
+  * **2. Control del LED RGB (Lógica de estados):** Bloque secuencial que evalúa el valor acumulado en `counter` y asigna las combinaciones de bits a `led[2:0]` para proyectar el color adecuado en cada etapa.
 
-
-## Simulaciones
-* **Explicación código testbench:**
-
-
-* **Funcionamiento variables empleadas:**
-  
+- **Código fuente del módulo:** [`src/semaforo.v`](src/semaforo.v)
 
 ### Evidencias
 
+<!-- Espacio reservado para el video o imágenes del funcionamiento en la FPGA -->
+
+
+https://github.com/user-attachments/assets/19b5d470-90f0-46c6-aab4-b64bdd4be9a0
 
 
 
 
 ---
 
-## Implementación
-
-
-* **Bloques definidos:**
-  * **1:**
-  
 ## Conclusiones
+
+### Ejercicio #1
+
+* **Validación del flujo de trabajo:** Logramos confirmar el correcto funcionamiento de las herramientas Vivado y la comunicación con la FPGA Zybo Z7 mediante la generación e implementación exitosa del *bitstream*.
+* **Mapeo físico mediante `.xdc`:** Comprobamos que asociar correctamente las señales del diseño HDL con los pines físicos de la tarjeta (como el reloj en `K17` y los canales del LED RGB #6) es indispensable para que el diseño responda en el hardware real como se espera.
+* **Manejo de temporización:** Comprendimos cómo usar un contador dentro del código Verilog para reducir la frecuencia del reloj de 125 MHz a tiempos visibles para el ojo humano sin necesidad de modificar el reloj físico de la tarjeta.
 
 
 
