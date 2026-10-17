@@ -89,3 +89,41 @@ La ALU cuenta con 4 operaciones. Se asignaron los colores verde, rojo, azul y am
 | Resta | 01 | Rojo |
 | And | 10 | Azul |
 | OR | 11 | Amarillo |
+
+### 1. Explicación general del funcionamiento del sistema
+* El sistema captura datos a través de cuatro interruptores (`sw[0]` a `sw[3]`) físicos en la FPGA[cite: 2].
+* Al presionar `btn[0]`, el sistema guarda el valor actual de los interruptores en el registro del Operando A[cite: 2].
+* Al presionar `btn[1]`, el sistema guarda el valor de los interruptores en el registro del Operando B[cite: 2].
+* Los valores de los operandos se mantienen almacenados de forma persistente hasta que se oprima nuevamente su respectivo botón de carga[cite: 2].
+* Los botones `btn[2]` y `btn[3]` cambian el estado del bit 0 y del bit 1 del código de operación, respectivamente[cite: 2].
+* La operación se mantiene seleccionada sin necesidad de mantener los botones oprimidos físicamente[cite: 2].
+* La ALU recibe los operandos y el código de operación, calculando el resultado de forma inmediata ante cualquier cambio en la entrada[cite: 1].
+* El resultado de 4 bits se muestra en los indicadores `led[0]` a `led[3]`[cite: 2].
+* Un indicador visual (LED RGB) refleja mediante un color la operación que se encuentra seleccionada en ese momento[cite: 2].
+
+### 2. Descripción de la arquitectura propuesta
+* El sistema emplea una arquitectura jerárquica que separa la lógica secuencial (memoria y control) de la lógica combinacional (cálculo).
+* La lógica secuencial se ubica en el módulo superior, utilizando la señal de reloj (`clk`) para gestionar el almacenamiento de datos en los registros `reg_A` y `reg_B`[cite: 2].
+* Para los botones de control de operación (`btn[2]` y `btn[3]`), el módulo superior implementa detectores de flanco de subida[cite: 2].
+* Esta detección de flancos evita cambios múltiples causados por la alta frecuencia del reloj, asegurando que el bit cambie solo una vez por pulsación[cite: 2].
+* La lógica combinacional está encapsulada por completo en la ALU[cite: 1].
+* La ALU funciona de manera aislada, sin conocer el estado de los botones ni encargarse de las conexiones físicas de la tarjeta FPGA[cite: 1].
+
+### 3. Explicación de los módulos desarrollados
+* **Módulo Top-Level:** [top.v](./top.v)
+  * Actúa como el controlador principal que recibe las entradas físicas y sincroniza el sistema con el reloj `clk`[cite: 2].
+  * Administra la memoria interna mediante la instanciación de los registros `reg_A`, `reg_B` y `reg_op`[cite: 2].
+  * Genera pulsos de un solo ciclo de reloj (`btn2_pulse` y `btn3_pulse`) usando registros de retardo (`btn2_d` y `btn3_d`) para alternar correctamente el código de operación[cite: 2].
+  * Instancia la ALU, pasándole los registros internos y dirigiendo la salida directamente a los LEDs[cite: 2].
+  * Controla el LED RGB (`led6_r`, `led6_g`, `led6_b`) mediante un bloque de casos (`case`) evaluando el registro de operación[cite: 2].
+* **Módulo ALU:** [ALUMODULE.v](./ALUMODULE.v)
+  * Modulo de procesamiento matemático y lógico que cuenta con entradas de 4 bits para los operandos (`A` y `B`) y de 2 bits para la operación (`op`)[cite: 1].
+  * Genera una salida de 4 bits (`Result`) utilizando asignación continua (`assign`)[cite: 1].
+  * Utiliza operadores condicionales (operador ternario) para ejecutar la suma, resta, AND y OR dependiendo exclusivamente del valor de `op`[cite: 1].
+
+### 4. Tabla de operaciones implementadas
+* **Operación `00` (Suma):** Suma los operandos (`A + B`)[cite: 1]. El LED RGB se enciende en color Verde (`led6_g = 1`)[cite: 2].
+* **Operación `01` (Resta):** Resta el operando B al operando A (`A - B`)[cite: 1]. El LED RGB se enciende en color Rojo (`led6_r = 1`)[cite: 2].
+* **Operación `10` (AND lógico):** Aplica la compuerta AND bit a bit (`A & B`)[cite: 1]. El LED RGB se enciende en color Azul (`led6_b = 1`)[cite: 2].
+* **Operación `11` (OR lógico):** Aplica la compuerta OR bit a bit (`A | B`)[cite: 1]. El LED RGB se enciende en color Amarillo al encender simultáneamente el canal rojo y verde (`led6_r = 1`, `led6_g = 1`)[cite: 2].
+* **Operación por defecto:** Para estados no contemplados, el resultado es `0000`[cite: 1] y el LED RGB permanece apagado[cite: 2].
