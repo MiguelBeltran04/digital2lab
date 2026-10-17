@@ -57,6 +57,11 @@ El código de operación (`op`) es de 2 bits, donde BTN2 conmuta el bit menos si
 
 
 
+
+
+
+
+
 ## Implementación
 
 ### Almacenamiento del código de operación:
