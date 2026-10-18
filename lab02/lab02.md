@@ -90,7 +90,7 @@ La ALU cuenta con 4 operaciones. Se asignaron los colores verde, rojo, azul y am
 | And | 10 | Azul |
 | OR | 11 | Amarillo |
 
-### 1. Explicación general del funcionamiento del sistema
+### Explicación general del funcionamiento del sistema
 - El sistema captura datos a través de cuatro interruptores (`sw[0]` a `sw[3]`) físicos en la FPGA.
 - Al presionar `btn[0]`, el sistema guarda el valor actual de los interruptores en el registro del Operando A.
 - Al presionar `btn[1]`, el sistema guarda el valor de los interruptores en el registro del Operando B.
@@ -101,7 +101,7 @@ La ALU cuenta con 4 operaciones. Se asignaron los colores verde, rojo, azul y am
 - El resultado de 4 bits se muestra en los indicadores `led[0]` a `led[3]`.
 - Un indicador visual (LED RGB) refleja mediante un color la operación que se encuentra seleccionada en ese momento.
 
-### 2. Descripción de la arquitectura propuesta
+### Descripción de la arquitectura propuesta
 - El sistema emplea una arquitectura jerárquica que separa la lógica secuencial (memoria y control) de la lógica combinacional (cálculo).
 - La lógica secuencial se ubica en el módulo superior, utilizando la señal de reloj (`clk`) para gestionar el almacenamiento de datos en los registros `reg_A` y `reg_B`.
 - Para los botones de control de operación (`btn[2]` y `btn[3]`), el módulo superior implementa detectores de flanco de subida.
@@ -109,7 +109,7 @@ La ALU cuenta con 4 operaciones. Se asignaron los colores verde, rojo, azul y am
 - La lógica combinacional está encapsulada por completo en la ALU.
 - La ALU funciona de manera aislada, sin conocer el estado de los botones ni encargarse de las conexiones físicas de la tarjeta FPGA.
 
-### 3. Explicación de los módulos desarrollados
+### Explicación de los módulos desarrollados
 - **Módulo Top-Level:** [top.v](src/top.v)
   * Actúa como el controlador principal que recibe las entradas físicas y sincroniza el sistema con el reloj `clk`.
   * Administra la memoria interna mediante la instanciación de los registros `reg_A`, `reg_B` y `reg_op`.
@@ -121,7 +121,7 @@ La ALU cuenta con 4 operaciones. Se asignaron los colores verde, rojo, azul y am
   * Genera una salida de 4 bits (`Result`) utilizando asignación continua (`assign`).
   * Utiliza operadores condicionales (operador ternario) para ejecutar la suma, resta, AND y OR dependiendo exclusivamente del valor de `op`.
 
-### 4. Tabla de operaciones implementadas
+### abla de operaciones implementadas
 - **Operación `00` (Suma):** Suma los operandos (`A + B`). El LED RGB se enciende en color Verde (`led6_g = 1`).
 - **Operación `01` (Resta):** Resta el operando B al operando A (`A - B`). El LED RGB se enciende en color Rojo (`led6_r = 1`).
 - **Operación `10` (AND lógico):** Aplica la compuerta AND bit a bit (`A & B`). El LED RGB se enciende en color Azul (`led6_b = 1`).
