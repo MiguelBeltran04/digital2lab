@@ -9,7 +9,7 @@
 - Sebastián Camilo Ortegon Hernandez – 1014861874
 - Andres Jacobo Rojas Gonzalez – 1025762831
  
-**Semestre:** 2026-2  
+**Semestre:** 2026-2   
 
 ---
 
