@@ -110,7 +110,7 @@ La ALU cuenta con 4 operaciones. Se asignaron los colores verde, rojo, azul y am
 - La ALU funciona de manera aislada, sin conocer el estado de los botones ni encargarse de las conexiones físicas de la tarjeta FPGA.
 
 ### 3. Explicación de los módulos desarrollados
-- **Módulo Top-Level:** [top.v](./top.v)
+- **Módulo Top-Level:** [top.v](src/top.v)
   * Actúa como el controlador principal que recibe las entradas físicas y sincroniza el sistema con el reloj `clk`.
   * Administra la memoria interna mediante la instanciación de los registros `reg_A`, `reg_B` y `reg_op`.
   * Genera pulsos de un solo ciclo de reloj (`btn2_pulse` y `btn3_pulse`) usando registros de retardo (`btn2_d` y `btn3_d`) para alternar correctamente el código de operación.
