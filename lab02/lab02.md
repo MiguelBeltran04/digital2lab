@@ -121,9 +121,14 @@ La ALU cuenta con 4 operaciones. Se asignaron los colores verde, rojo, azul y am
   * Genera una salida de 4 bits (`Result`) utilizando asignación continua (`assign`).
   * Utiliza operadores condicionales (operador ternario) para ejecutar la suma, resta, AND y OR dependiendo exclusivamente del valor de `op`.
 
-### abla de operaciones implementadas
-- **Operación `00` (Suma):** Suma los operandos (`A + B`). El LED RGB se enciende en color Verde (`led6_g = 1`).
-- **Operación `01` (Resta):** Resta el operando B al operando A (`A - B`). El LED RGB se enciende en color Rojo (`led6_r = 1`).
-- **Operación `10` (AND lógico):** Aplica la compuerta AND bit a bit (`A & B`). El LED RGB se enciende en color Azul (`led6_b = 1`).
-- **Operación `11` (OR lógico):** Aplica la compuerta OR bit a bit (`A | B`). El LED RGB se enciende en color Amarillo al encender simultáneamente el canal rojo y verde (`led6_r = 1`, `led6_g = 1`).
+### Tabla de operaciones implementadas
+
+- El código de operación (`op`) es de 2 bits, donde BTN2 conmuta el bit menos significativo (`op[0]`) y BTN3 conmuta el bit más significativo (`op[1]`). Los colores definidos para las compuertas lógicas cumplen con el requisito de diferenciación visual:
+
+| Código (`op`) | Operación Ejecutada | Expresión Lógica/Aritmética | Color en LED RGB |
+| :---: | :--- | :---: | :--- |
+| `00` | Suma Aritmética | `A + B` | Verde (`led6_g = 1`) |
+| `01` | Resta Aritmética | `A - B` | Rojo (`led6_r = 1`) |
+| `10` | AND Lógico | `A & B` | Azul (`led6_b = 1`) |
+| `11` | OR Lógico | `A \| B` | Amarillo (`led6_r = 1`, `led6_g = 1`) |
 - **Operación por defecto:** Para estados no contemplados, el resultado es `0000` y el LED RGB permanece apagado.
