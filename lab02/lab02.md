@@ -31,6 +31,8 @@
 - El resultado de 4 bits se muestra en los indicadores `led[0]` a `led[3]`.
 - Un indicador visual (LED RGB) refleja mediante un color la operación que se encuentra seleccionada en ese momento.
 
+---
+
 ### Descripción de la arquitectura propuesta
 - El sistema emplea una arquitectura jerárquica que separa la lógica secuencial (memoria y control) de la lógica combinacional (cálculo).
 - La lógica secuencial se ubica en el módulo superior, utilizando la señal de reloj (`clk`) para gestionar el almacenamiento de datos en los registros `reg_A` y `reg_B`.
@@ -38,7 +40,7 @@
 - Esta detección de flancos evita cambios múltiples causados por la alta frecuencia del reloj, asegurando que el bit cambie solo una vez por pulsación.
 - La lógica combinacional está encapsulada por completo en la ALU.
 - La ALU funciona de manera aislada, sin conocer el estado de los botones ni encargarse de las conexiones físicas de la tarjeta FPGA.
-
+---
 ### Explicación de los módulos desarrollados
 - **Módulo Top-Level:** [top.v](src/top.v)
   * Actúa como el controlador principal que recibe las entradas físicas y sincroniza el sistema con el reloj `clk`.
@@ -50,7 +52,7 @@
   * Modulo de procesamiento matemático y lógico que cuenta con entradas de 4 bits para los operandos (`A` y `B`) y de 2 bits para la operación (`op`).
   * Genera una salida de 4 bits (`Result`) utilizando asignación continua (`assign`).
   * Utiliza operadores condicionales (operador ternario) para ejecutar la suma, resta, AND y OR dependiendo exclusivamente del valor de `op`.
-
+---
 ### Tabla de operaciones implementadas
 
 - El código de operación (`op`) es de 2 bits, donde BTN2 conmuta el bit menos significativo (`op[0]`) y BTN3 conmuta el bit más significativo (`op[1]`):
@@ -62,7 +64,7 @@
 | `11` | OR Lógico | `A \| B` | Amarillo (`led6_r = 1`, `led6_g = 1`) |
 - **Operación por defecto:** Para estados no contemplados, el resultado es `0000` y el LED RGB permanece apagado.
 
-
+---
 
 
 
