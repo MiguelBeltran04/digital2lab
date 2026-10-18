@@ -116,7 +116,7 @@ La ALU cuenta con 4 operaciones. Se asignaron los colores verde, rojo, azul y am
   * Genera pulsos de un solo ciclo de reloj (`btn2_pulse` y `btn3_pulse`) usando registros de retardo (`btn2_d` y `btn3_d`) para alternar correctamente el código de operación.
   * Instancia la ALU, pasándole los registros internos y dirigiendo la salida directamente a los LEDs.
   * Controla el LED RGB (`led6_r`, `led6_g`, `led6_b`) mediante un bloque de casos (`case`) evaluando el registro de operación.
-- **Módulo ALU:** [ALUMODULE.v](./ALUMODULE.v)
+- **Módulo ALU:** [ALUMODULE.v](src/ALUMODULE.v)
   * Modulo de procesamiento matemático y lógico que cuenta con entradas de 4 bits para los operandos (`A` y `B`) y de 2 bits para la operación (`op`).
   * Genera una salida de 4 bits (`Result`) utilizando asignación continua (`assign`).
   * Utiliza operadores condicionales (operador ternario) para ejecutar la suma, resta, AND y OR dependiendo exclusivamente del valor de `op`.
