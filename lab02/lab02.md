@@ -54,17 +54,50 @@
 ### Tabla de operaciones implementadas
 
 - El código de operación (`op`) es de 2 bits, donde BTN2 conmuta el bit menos significativo (`op[0]`) y BTN3 conmuta el bit más significativo (`op[1]`):
+  
 | Código (`op`) | Operación Ejecutada | Expresión Lógica/Aritmética | Color en LED RGB |
 | :---: | :--- | :---: | :--- |
 | `00` | Suma Aritmética | `A + B` | Verde (`led6_g = 1`) |
 | `01` | Resta Aritmética | `A - B` | Rojo (`led6_r = 1`) |
 | `10` | AND Lógico | `A & B` | Azul (`led6_b = 1`) |
 | `11` | OR Lógico | `A \| B` | Amarillo (`led6_r = 1`, `led6_g = 1`) |
+
 - **Operación por defecto:** Para estados no contemplados, el resultado es `0000` y el LED RGB permanece apagado.
 
 ---
 
+## 1. Explicación general del funcionamiento del sistema
 
+El sistema consiste en el diseño e implementación de una Unidad Aritmético-Lógica (ALU) de 4 bits en la FPGA Zybo Z7. Su funcionamiento se basa en capturar valores numéricos desde un bus de entrada (4 switches) y almacenarlos temporalmente en memoria mediante el uso de botones físicos. 
+
+Una vez ingresados los operandos, el usuario puede conmutar entre cuatro operaciones aritméticas y lógicas utilizando dos botones de control que modifican el código de operación internamente. El sistema procesa de manera continua los datos almacenados y muestra el resultado en tiempo real a través de los 4 LEDs estándar de la tarjeta. Simultáneamente, un LED RGB actúa como indicador visual de estado, mostrando un color único que le permite al usuario identificar rápidamente qué operación matemática o lógica se está ejecutando en ese momento.
+
+## 2. Descripción de la arquitectura propuesta
+
+La arquitectura del sistema sigue un modelo de *datapath* simplificado que separa estrictamente la lógica secuencial (memoria e interfaz física) de la lógica combinacional (procesamiento de datos). 
+
+Para lograr el funcionamiento requerido, la arquitectura implementa:
+* **Almacenamiento persistente:** Se definieron tres registros internos (`reg_A`, `reg_B` y `reg_op`) que conservan los valores de los operandos y la operación seleccionada. Esto permite que la ALU siga operando aunque los switches cambien de posición o los botones se dejen de presionar.
+* **Control de rebotes/Flancos (Edge Detection):** Dado que la FPGA opera con un reloj principal de 125 MHz (`clk`), mantener presionado un botón cambiaría la operación millones de veces por segundo. Para solucionarlo, la arquitectura incorpora un detector de flanco de subida en los botones de selección (BTN2 y BTN3), garantizando que el cambio de código de operación ocurra una única vez por cada pulsación física.
+* **Instanciación jerárquica:** El datapath fluye desde las entradas físicas hacia los registros secuenciales en el nivel superior, de ahí pasan como cables directos hacia el módulo combinacional de la ALU, y finalmente retornan al nivel superior para proyectarse en los LEDs físicos.
+
+## 3. Explicación de los módulos desarrollados
+
+El diseño se modularizó en dos archivos independientes para cumplir con los requisitos estructurales:
+
+* **Módulo Superior (`top_system`):** Es el módulo principal y de carácter secuencial. Se encarga de toda la interacción con los periféricos de la tarjeta Zybo Z7 (reloj, switches, botones, LEDs estándar y LED RGB). Dentro de este módulo se evalúan las pulsaciones: BTN0 y BTN1 actúan como señales de carga (Enable) para guardar los datos de los switches en `reg_A` y `reg_B` respectivamente, mientras que BTN2 y BTN3 conmutan los bits del registro de operación (`reg_op`). Adicionalmente, este módulo contiene la estructura condicional (`case`) que asigna los canales de color al LED RGB.
+* **Módulo ALU (`alu`):** Es un submódulo netamente combinacional dedicado exclusivamente al procesamiento de datos. No posee conexión al reloj (`clk`), no almacena variables internas y desconoce el origen físico de sus señales. Recibe los dos operandos de 4 bits y el código de 2 bits, devolviendo un resultado de 4 bits. Internamente utiliza un operador condicional anidado (`assign`) para enrutar instantáneamente el resultado de la suma, resta, AND u OR lógico dependiendo del código de operación.
+
+## 4. Tabla de operaciones implementadas
+
+El código de operación (`op`) es de 2 bits, donde BTN2 conmuta el bit menos significativo (`op[0]`) y BTN3 conmuta el bit más significativo (`op[1]`). Los colores definidos para las compuertas lógicas cumplen con el requisito de diferenciación visual:
+
+| Código (`op`) | Operación Ejecutada | Expresión Lógica/Aritmética | Color en LED RGB |
+| :---: | :--- | :---: | :--- |
+| `00` | Suma Aritmética | `A + B` | Verde (`led6_g = 1`) |
+| `01` | Resta Aritmética | `A - B` | Rojo (`led6_r = 1`) |
+| `10` | AND Lógico | `A & B` | Azul (`led6_b = 1`) |
+| `11` | OR Lógico | `A \| B` | Amarillo (`led6_r = 1`, `led6_g = 1`) |
 
 
 
