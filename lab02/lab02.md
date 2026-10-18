@@ -20,8 +20,8 @@
 
 ---
 
-### Explicación general del funcionamiento del sistema
-- El sistema captura datos a través de cuatro interruptores (`sw[0]` a `sw[3]`) físicos en la FPGA.
+### Explicación general del funcionamiento del codigo
+- El codigo captura datos a través de cuatro interruptores (`sw[0]` a `sw[3]`) físicos en la FPGA.
 - Al presionar `btn[0]`, el sistema guarda el valor actual de los interruptores en el registro del Operando A.
 - Al presionar `btn[1]`, el sistema guarda el valor de los interruptores en el registro del Operando B.
 - Los valores de los operandos se mantienen almacenados de forma persistente hasta que se oprima nuevamente su respectivo botón de carga.
