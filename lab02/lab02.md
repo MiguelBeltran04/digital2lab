@@ -9,7 +9,7 @@
 - Sebastián Camilo Ortegon Hernandez – 1014861874
 - Andres Jacobo Rojas Gonzalez – 1025762831
  
-**Semestre:** 2026-2  
+**Semestre:** 2026-2   
 
 ---
 
@@ -18,7 +18,60 @@
 - **ALU:**  Para este ejercicio se programo la ALU en un modulo completamente aparte al top_system o unidad de control (Básicamente para que esta cumpliera de forma exclusiva la función de realizar operaciones con base a las entradas, y devolver al top el resultado dependiendo de las entradas actuales). En esta parte dependiendo del estado de un par de botones de la FPGA, se realizara una operación entre dos números de 4 bits (Mas adelante se vera con mas detalle como se guardan estos números en el programa). Estas operaciones son; suma (`2'b00`), resta (`2'b01`) y comparación utilizando AND (`2'b10`) y OR (`2'b11`) y al final, el resultado seguirá siendo de 4 bits (Si por ejemplo, el resultado de la suma de los dos números es mayor a 4 bits, se mostraran en los bits de salida los 4 bits menos significativos del resultado).
 - **Funcionamiento de interfaz fisica:** Los números se guardaran gracias a la activación física de dos botones (por medio de los cuales el usuario decidirá si guardar el numero en el registro A, en el registro B, en ambos o si decide no guardar el numero previamente seleccionado por medio de los switches de la placa de desarrollo). Finalmente, dependiendo de la operación seleccionada (La cual se debe seleccionar al pulsar una vez el boton y no manteniendolo presionado), el led RGB se encendera y arrojara distintos colores (Verde si se selecciona la suma; Rojo si se selecciona la resta; Azul si se selección la compuerta AND y Amarillo si se selecciona la compuerta OR)
 
+### Resumiendo
+- El sistema captura datos a través de cuatro interruptores (`sw[0]` a `sw[3]`) físicos en la FPGA.
+- Al presionar `btn[0]`, el sistema guarda el valor actual de los interruptores en el registro del Operando A.
+- Al presionar `btn[1]`, el sistema guarda el valor de los interruptores en el registro del Operando B.
+- Los valores de los operandos se mantienen almacenados de forma persistente hasta que se oprima nuevamente su respectivo botón de carga.
+- Los botones `btn[2]` y `btn[3]` cambian el estado del bit 0 y del bit 1 del código de operación, respectivamente.
+- La operación se mantiene seleccionada sin necesidad de mantener los botones oprimidos físicamente.
+- La ALU recibe los operandos y el código de operación, calculando el resultado de forma inmediata ante cualquier cambio en la entrada.
+- El resultado de 4 bits se muestra en los indicadores `led[0]` a `led[3]`.
+- Un indicador visual (LED RGB) refleja mediante un color la operación que se encuentra seleccionada en ese momento.
+
 ---
+
+### Descripción de la arquitectura propuesta
+- El sistema emplea una arquitectura jerárquica que separa la lógica secuencial (memoria y control) de la lógica combinacional (cálculo).
+- La lógica secuencial se ubica en el módulo superior, utilizando la señal de reloj (`clk`) para gestionar el almacenamiento de datos en los registros `reg_A` y `reg_B`.
+- Para los botones de control de operación (`btn[2]` y `btn[3]`), el módulo superior implementa detectores de flanco de subida.
+- Esta detección de flancos evita cambios múltiples causados por la alta frecuencia del reloj, asegurando que el bit cambie solo una vez por pulsación.
+- La lógica combinacional está encapsulada por completo en la ALU.
+- La ALU funciona de manera aislada, sin conocer el estado de los botones ni encargarse de las conexiones físicas de la tarjeta FPGA.
+---
+### Explicación de los módulos desarrollados
+- **Módulo Top-Level:** [top.v](src/top.v)
+  * Actúa como el controlador principal que recibe las entradas físicas y sincroniza el sistema con el reloj `clk`.
+  * Administra la memoria interna mediante la instanciación de los registros `reg_A`, `reg_B` y `reg_op`.
+  * Genera pulsos de un solo ciclo de reloj (`btn2_pulse` y `btn3_pulse`) usando registros de retardo (`btn2_d` y `btn3_d`) para alternar correctamente el código de operación.
+  * Instancia la ALU, pasándole los registros internos y dirigiendo la salida directamente a los LEDs.
+  * Controla el LED RGB (`led6_r`, `led6_g`, `led6_b`) mediante un bloque de casos (`case`) evaluando el registro de operación.
+- **Módulo ALU:** [ALUMODULE.v](src/ALUMODULE.v)
+  * Modulo de procesamiento matemático y lógico que cuenta con entradas de 4 bits para los operandos (`A` y `B`) y de 2 bits para la operación (`op`).
+  * Genera una salida de 4 bits (`Result`) utilizando asignación continua (`assign`).
+  * Utiliza operadores condicionales (operador ternario) para ejecutar la suma, resta, AND y OR dependiendo exclusivamente del valor de `op`.
+---
+### Tabla de operaciones implementadas
+
+- El código de operación (`op`) es de 2 bits, donde BTN2 conmuta el bit menos significativo (`op[0]`) y BTN3 conmuta el bit más significativo (`op[1]`):
+  
+| Código (`op`) | Operación Ejecutada | Expresión Lógica/Aritmética | Color en LED RGB |
+| :---: | :--- | :---: | :--- |
+| `00` | Suma Aritmética | `A + B` | Verde (`led6_g = 1`) |
+| `01` | Resta Aritmética | `A - B` | Rojo (`led6_r = 1`) |
+| `10` | AND Lógico | `A & B` | Azul (`led6_b = 1`) |
+| `11` | OR Lógico | `A \| B` | Amarillo (`led6_r = 1`, `led6_g = 1`) |
+
+- **Operación por defecto:** Para estados no contemplados, el resultado es `0000` y el LED RGB permanece apagado.
+
+---
+
+
+
+
+
+
+
 
 ## Implementación
 
@@ -47,3 +100,4 @@ La ALU cuenta con 4 operaciones. Se asignaron los colores verde, rojo, azul y am
 | Resta | 01 | Rojo |
 | And | 10 | Azul |
 | OR | 11 | Amarillo |
+
