@@ -103,3 +103,17 @@ La ALU cuenta con 4 operaciones. Se asignaron los colores verde, rojo, azul y am
 | And | 10 | Azul |
 | OR | 11 | Amarillo |
 
+## Testbench
+
+### Explicación de la simulación
+- **Operandos:** Por medio de los switches que cuenta la placa de desarrollo se definen los operandos A y B. Si btn[0] = 1, el valor que se haya ingresado por medio de estos se guardara en reg_A, y si btn[1] = 1 este se guardara en reg_B (Las cuales están en el modulo top). En la simulación se evidencia como se guardan en las variables previamente mencionadas los números `1001` y `0011`. Posteriormente los switches registran un valor de `1111`. Sin embargo al no estar encendidos btn[0] o btn[1], el numero nunca se guardar en alguno de los registros y por ende se mantendran los valores que previamente si se guardaron.
+Por ultimo se muestra como estos valores en el mismo instante de tiempo son recibidos por la ALU y esta de una vez los opera dependiendo de los valores de btn[2] y btn[3].
+
+- **Selección de operación:** Por defecto se evidencia que si btn[2] y btn[3] son iguales a cero, automáticamente la ALU sumara ambos números. Primeramente suma `1001` y `0000` (ya que no hay nada guardado en reg_B), lo cual arroja `1001`. Y una vez guardado el segundo operando, el resultado de la suma entre `1001` y `0011` da `1100` (Cabe resaltar que el valor que obtiene la ALU lo hace por medio de las dos entradas op y no directamente de btn, mas adelante se vera la importancia de manejar asi los operandos). En el caso de la resta, btn[2] = 1 y el resultado termina siendo `0110`, op[1:0] termina siendo igual a 01. 
+Ahora bien, estando en este estado, en el testbench directamente se pasa a la operación logica OR la cual esta definida en op[1:0] como `11`. Sin embargo, al tener presente en el código que, al oprimir uno de los botones este tiene que mantener el valor al que cambio (Sea 0 o 1). En este caso solo es necesario oprimir btn[3] para que este sea igual a 1, y así hacer que op[1:0] pase a `11`. El resultado de la operación termina siendo `1011`. Finalmente se cambia la operación a AND, y para eso se oprime btn[2] para que op[1:0] pase de `11` a `10`. Como resultado de la operación se obtiene el numero `0001`.
+
+- **LED RGB:** Por ultimo, dependiendo de reg_op (Registro que conserva los valores que definen las operaciones y que inmediatamente enciados a la ALU), el led RGB se ecendera y variara de color como ya se explico en la sección anterior. En la simulación se evidencia el encendido una vez la ALU cambia el valor que tenga en op[1:0].
+
+  
+<img width="1631" height="487" alt="image" src="https://github.com/user-attachments/assets/536c2216-c23e-437f-8611-299594549319" />
+
