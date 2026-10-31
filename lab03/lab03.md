@@ -78,7 +78,10 @@
   * Se define el parámetro `DEBOUNCE_CYCLES`, el cual indica el numero de ciclos del clock consecutivos durante los cuales la señal del botón debe permanecer estable o constante para que se pueda considerar como valida (considerando que la FPGA cuenta con un clock de 125 MHz, ese tiempo seria de unos 20 ms para que se valida la señal) y con `COUNTER_WIDTH` se calcula automáticamente la cantidad de bits que necesita el contador.
   * Se presentan 3 entradas (`clk`,`btn_in`  y `rst`) y 2 salidas (`btn_level`  y `btn_pulse`), estas ultimas sirven para indicar si el botón se ha presionado de forma estable y constante y para señalar por medio de un unico pulso la confirmación de la pulsación del boton.
   * Se cuenta con `reg sync0`  y `reg sync1`, con este ultimo, se va comparando con `btn_level` y para verificar si el estado sigue estable (Entre estar y no estar presionado el boton) o si hay algun cambio. En el momento en el que la entrada se mantiene sin cambios y logra durar mas de 20 ms, `btn_level` toma el valor de `sync1`. Y si por ejemplo si la transición fue hacia un alto, `sync1==1` y posterior a eso `btn_pulse==1`, si este deja de estar en alto o no hace esa transición por default `btn_pulse==0` y el contador se reiniciara
-  * 
+   
+ - **Módulo SELECTOR:** [comb_selector.v](src/comb_selector.v)
+  * Este tiene la función de que por medio del uso de un botón, se vayan rotando todas las posibles combinaciones de valores previamente colocados (Serian 4 números distintos, cada uno de 4 bits). Esto se hace cuando recibe la señal `next_comb`. Al final las dos salidas son `read_addrA` y `read_addrB`, las cuales indican la dirección/ubicación del operando A Y B.
+  * Se cuenta con `comb_index`, la cual va incrementando de 1 en 1 hasta llegar a 11 y se reinicia a 0 creando un bucle o ciclo de 12 "estados" (Son 12, ya que es la cantidad total de pares ordenados que se pueden obtener si se quiere operar dos registros distintos entre si)
   
   
 ---
@@ -96,4 +99,9 @@
   * En primer lugar se aplica un reset inicial con una duración de 3 ciclos de reloj, para limpiar los registros y dejar el contador en 0. Posteriormente se prueba alternando los valores de `btn_in` en un corto periodo de tiempo, lo que provoca que no se llegue en tiempo al valor de `DEBOUNCE_CYCLES`, el cual en el caso de la simulación se dejo definido como la duración de cuatro ciclos de `counter`.
   * Una vez se hayan superado esos 4 ciclos de reloj (lo que indica como se logra ver en `btn_in` que el boton esta pulsado por un periodo prolongado de tiempo), `btn_level` cambia a 1 al igual que `btn_pulse` (este ultimo solo dura un ciclo de reloj) y asi se mantiene hasta que se deje de pulsar el boton (Se evidencia que como tal `counter` responde a `sync1` y no directamente a `btn_in`, esto básicamente se da porque `sync0` y `sync1` son una cadena de Flip Flops D las caules ayudan a tener una "estabilidad" si las pulsaciones del boton no coinciden con los flancos de subida del clock.
   * <img width="1917" height="581" alt="image" src="https://github.com/user-attachments/assets/aca75a59-ae91-48e5-9256-991325f89598" />
+
+ - **Módulo SELECTOR:** [comb_selector_tb.v](src/comb_selector_tb.v)
+  * En la simulación se hizo un barrido por los 12 posibles "estados", en donde tras la activación de `next_comb` durante un ciclo de reloj (Para esta simulación no se coloco en ns los clocks y la respuesta de las demas entradas y salidas), se le empieza a sumar a `i` 1 y se pasa a la siguiente combinación. Una vez se hallan recorrido las 12 direcciones, se comprueba que para el siguiente pulso se tiene que reiniciar el contador regresando al estado inicial.
+  * Al final se mantiene `next_comb` igualado a cero para verificar que no se cambie de estado y que el contador no siga sumándose unos tras varias ciclos de reloj con `next_comb=0`
+  * <img width="1917" height="536" alt="image" src="https://github.com/user-attachments/assets/5902bef7-a4c1-4cdc-a8bc-534e24bf3780" />
 
