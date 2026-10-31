@@ -79,10 +79,15 @@
   * Se presentan 3 entradas (`clk`,`btn_in`  y `rst`) y 2 salidas (`btn_level`  y `btn_pulse`), estas ultimas sirven para indicar si el botón se ha presionado de forma estable y constante y para señalar por medio de un unico pulso la confirmación de la pulsación del boton.
   * Se cuenta con `reg sync0`  y `reg sync1`, con este ultimo, se va comparando con `btn_level` y para verificar si el estado sigue estable (Entre estar y no estar presionado el boton) o si hay algun cambio. En el momento en el que la entrada se mantiene sin cambios y logra durar mas de 20 ms, `btn_level` toma el valor de `sync1`. Y si por ejemplo si la transición fue hacia un alto, `sync1==1` y posterior a eso `btn_pulse==1`, si este deja de estar en alto o no hace esa transición por default `btn_pulse==0` y el contador se reiniciara
    
- - **Módulo SELECTOR:** [comb_selector.v](src/comb_selector.v)
+- **Módulo SELECTOR:** [comb_selector.v](src/comb_selector.v)
   * Este tiene la función de que por medio del uso de un botón, se vayan rotando todas las posibles combinaciones de valores previamente colocados (Serian 4 números distintos, cada uno de 4 bits). Esto se hace cuando recibe la señal `next_comb`. Al final las dos salidas son `read_addrA` y `read_addrB`, las cuales indican la dirección/ubicación del operando A Y B.
   * Se cuenta con `comb_index`, la cual va incrementando de 1 en 1 hasta llegar a 11 y se reinicia a 0 creando un bucle o ciclo de 12 "estados" (Son 12, ya que es la cantidad total de pares ordenados que se pueden obtener si se quiere operar dos registros distintos entre si)
-  
+
+- **Módulo BANCO DE REGISTROS:** [reg_bank.v](src/reg_bank.v)
+  * En este modulo se almacenan 4 registros de 4 bits cada uno.
+  * Se cuenta con `registers`, el cual es un arreglo de 4 posiciones y en cada uno se encuentro un valor de 4 bits. Por otro lado se encuentran las entradas `write_enable`, `write_addr` y `write_data`, los cuales sirven para habilitar la escritura de un valor, el registro en el que este se escribira y el valor que se va a guardar. Tambien se tiene a `read_addrA` y a `read_addrB`, los cuales indican las direcciones de los registros que van a ser leidos, y por ultimo estan `A` y `B`, los cuales son los datos leidos de las direcciones previamente marcadas.
+  * Si se activa el reset, se ejecuta un bucle el cual hara que se reinicien las 4 posiciones de memoria a 0.
+  * si `write_enable`, se guarda el valor que se encuentra en `write_data` en el registro especificado por `write_addr`. En cuanto se cambien las direcciones, las salidas automáticamente cambian sus valores, ya que estas no dependen del clock principal.
   
 ---
 ## Testbench
@@ -105,3 +110,5 @@
   * Al final se mantiene `next_comb` igualado a cero para verificar que no se cambie de estado y que el contador no siga sumándose unos tras varias ciclos de reloj con `next_comb=0`
   * <img width="1917" height="536" alt="image" src="https://github.com/user-attachments/assets/5902bef7-a4c1-4cdc-a8bc-534e24bf3780" />
 
+- **Módulo BANCO REGISTROS:** [reg_bank_tb.v](src/reg_bank_tb.v)
+  *
