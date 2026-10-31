@@ -73,7 +73,13 @@
   * Utiliza operadores condicionales (operador ternario) para ejecutar la operación de suma, resta, AND, OR, XOR, NOT A, DESPLAZAMIENTO A LA IZQUIERDA DE A Y EL COMPARADOR DE A, dependiendo exclusivamente del valor de `op`.
   * Por defecto siempre entregara como resultado 8'sd0.
   
-- **Módulo ALU:** [ALUMODULE.v](src/ALUMODULE.v)
+- **Módulo Button Debounce (Antirrebote):** [button_debounce.v](src/button_debounce.v)
+  * El objetivo de este modulo es el de filtrar ruido electrico (rebotes) porovcados por los botones mecanicos de la FPGA.
+  * Se define el parámetro `DEBOUNCE_CYCLES`, el cual indica el numero de ciclos del clock consecutivos durante los cuales la señal del botón debe permanecer estable o constante para que se pueda considerar como valida (considerando que la FPGA cuenta con un clock de 125 MHz, ese tiempo seria de unos 20 ms para que se valida la señal) y con `COUNTER_WIDTH` se calcula automáticamente la cantidad de bits que necesita el contador.
+  * Se presentan 3 entradas (`clk`,`btn_in`  y `rst`) y 2 salidas (`btn_level`  y `btn_pulse`), estas ultimas sirven para indicar si el botón se ha presionado de forma estable y constante y para señalar por medio de un unico pulso la confirmación de la pulsación del boton.
+  * Se cuenta con `reg sync0`  y `reg sync1`, con este ultimo, se va comparando con `btn_level` y para verificar si el estado sigue estable (Entre estar y no estar presionado el boton) o si hay algun cambio. En el momento en el que la entrada se mantiene sin cambios y logra durar mas de 20 ms, `btn_level` toma el valor de `sync1`. Y si por ejemplo si la transición fue hacia un alto, `sync1==1` y posterior a eso `btn_pulse==1`, si este deja de estar en alto o no hace esa transición por default `btn_pulse==0` y el contador se reiniciara
+  * 
+  
   
 ---
 ## Testbench
@@ -85,4 +91,9 @@
   * Se espera 1 ns para que la ALU realice la operación y así compararlo con `expected`
   * Por medio de un if y del uso del operador de desigualdad estricta se comparan ambos resultados y si estos coinciden se va sumando 1 a `tests` hasta llegar a 2048
   * <img width="1917" height="640" alt="image" src="https://github.com/user-attachments/assets/45e87f1a-7b1f-4128-a7e4-6384b99bf6ad" />
+  
+- **Módulo ANTIREBOTE:** [button_debounce_tb.v](src/button_debounce_tb.v)
+  * En primer lugar se aplica un reset inicial con una duración de 3 ciclos de reloj, para limpiar los registros y dejar el contador en 0. Posteriormente se prueba alternando los valores de `btn_in` en un corto periodo de tiempo, lo que provoca que no se llegue en tiempo al valor de `DEBOUNCE_CYCLES`, el cual en el caso de la simulación se dejo definido como la duración de cuatro ciclos de `counter`.
+  * Una vez se hayan superado esos 4 ciclos de reloj (lo que indica como se logra ver en `btn_in` que el boton esta pulsado por un periodo prolongado de tiempo), `btn_level` cambia a 1 al igual que `btn_pulse` (este ultimo solo dura un ciclo de reloj) y asi se mantiene hasta que se deje de pulsar el boton (Se evidencia que como tal `counter` responde a `sync1` y no directamente a `btn_in`, esto básicamente se da porque `sync0` y `sync1` son una cadena de Flip Flops D las caules ayudan a tener una "estabilidad" si las pulsaciones del boton no coinciden con los flancos de subida del clock.
+  * <img width="1917" height="581" alt="image" src="https://github.com/user-attachments/assets/aca75a59-ae91-48e5-9256-991325f89598" />
 
