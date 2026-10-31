@@ -15,9 +15,22 @@
 
 ## Funcionamiento del sistema
 
--
+- El sistema integra una Unidad Aritmético Lógica (ALU) de 4 bits, un banco de 4 registros de memoria y un display externo (TM1637) para ejecutar y visualizar operaciones matemáticas y lógicas.
+- El ingreso de datos se realiza a través de 4 interruptores físicos (`sw[3:0]`), cuyo valor se guarda temporalmente en los registros internos (R0 a R3).
+- La selección del registro donde se va a escribir se controla con el botón `BTN0`, y el registro activo se identifica de manera visual mediante un color específico en el LED RGB.
+- Al oprimir `BTN1`, el valor actual de los interruptores se almacena de forma persistente en el registro seleccionado.
+- Con el botón `BTN2`, el sistema alterna cíclicamente entre 12 combinaciones posibles de operandos (A y B) tomados del banco de registros. Los 4 LEDs estándar de la tarjeta se encienden para indicar qué registros están siendo utilizados en ese momento.
+- Los tres primeros interruptores (`sw[2:0]`) definen el código de la operación que ejecutará la ALU.
+- La operación matemática o lógica se ejecuta únicamente al presionar `BTN3`. En ese instante, la ALU procesa los operandos y el resultado se captura para mostrarse en el display de 7 segmentos.
+- El valor proyectado en el display se mantiene estático, reteniendo la última operación válida, hasta que se vuelva a oprimir `BTN3`, sin importar si los interruptores o los registros se modifican en el proceso.
+
+---
 
 ### Resumiendo
+
+- **Carga de datos:** Se ingresa el valor en los interruptores (`sw`), se elige el registro destino con `BTN0` (guiado por el LED RGB) y se guarda oprimiendo `BTN1`.
+- **Selección de operandos:** Se oprime `BTN2` para rotar qué pareja de registros actuarán como operando A y operando B (indicado por los LEDs regulares).
+- **Ejecución y visualización:** Se configura la operación deseada con los interruptores `sw[2:0]` y se ejecuta con `BTN3`, actualizando instantáneamente el resultado en el display externo.
 
 
 ---
