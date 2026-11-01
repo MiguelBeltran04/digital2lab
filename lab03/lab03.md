@@ -68,6 +68,14 @@
   * Se actualiza únicamente de manera síncrona en el flanco de subida del reloj, y solo cuando la señal `execute` (controlada por `btn3`) se pone en alto.
   * Garantiza que el display no cambie si se modifican los operandos en el banco de registros, hasta que explícitamente se ordene una nueva ejecución.
 
+
+- **Módulo Write Selector:** [write_selector.v](src/write_selector.v)
+  * Gestiona qué registro dentro del banco será modificado por el usuario al presionar el botón de escritura.
+  * Utiliza un contador interno básico (`write_addr`) de 2 bits.
+  * El contador avanza de forma cíclica (0, 1, 2, 3, 0...) con cada pulso detectado en la señal `select_next` (controlada por `btn0`).
+
+
+
 - **Módulo System Core:** [system_core.v](src/system_core.v)
   * Actúa como el puente lógico del sistema, agrupando e interconectando el módulo de escritura, el banco de registros, el selector de combinaciones, la ALU y el latch de resultados.
   * Se alimenta del reloj (`clk`), de las señales limpias de los switches y de los pulsos de un ciclo (provenientes de `top.v`) y reparte estas señales entre los submódulos de la arquitectura.
@@ -83,11 +91,6 @@
   * Instancia el módulo principal lógico (`system_core`), pasándole las señales estabilizadas y los pulsos generados por los botones.
   * Gestiona directamente el LED RGB, asignándole un color fijo dependiendo del valor que devuelva la señal `selected_reg`: Rojo (`0`), Verde (`1`), Azul (`2`) o Blanco (`3`).
   * Instancia el controlador del display externo de 7 segmentos (`display_tm1637`) para la visualización del resultado retenido.
-
-- **Módulo Write Selector:** [write_selector.v](src/write_selector.v)
-  * Gestiona qué registro dentro del banco será modificado por el usuario al presionar el botón de escritura.
-  * Utiliza un contador interno básico (`write_addr`) de 2 bits.
-  * El contador avanza de forma cíclica (0, 1, 2, 3, 0...) con cada pulso detectado en la señal `select_next` (controlada por `btn0`).
 
 
 
