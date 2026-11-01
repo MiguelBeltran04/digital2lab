@@ -62,6 +62,36 @@
   * Se cuenta con `registers`, el cual es un arreglo de 4 posiciones y en cada uno se encuentro un valor de 4 bits. Por otro lado se encuentran las entradas `write_enable`, `write_addr` y `write_data`, los cuales sirven para habilitar la escritura de un valor, el registro en el que este se escribira y el valor que se va a guardar. Tambien se tiene a `read_addrA` y a `read_addrB`, los cuales indican las direcciones de los registros que van a ser leidos, y por ultimo estan `A` y `B`, los cuales son los datos leidos de las direcciones previamente marcadas.
   * Si se activa el reset, se ejecuta un bucle el cual hara que se reinicien las 4 posiciones de memoria a 0.
   * si `write_enable`, se guarda el valor que se encuentra en `write_data` en el registro especificado por `write_addr`. En cuanto se cambien las direcciones, las salidas automáticamente cambian sus valores, ya que estas no dependen del clock principal.
+
+- **Módulo Latch de Resultados:** [result_latch.v](src/result_latch.v)
+  * Su propósito principal es aislar la salida dinámica de la ALU y retener su último resultado válido.
+  * Se actualiza únicamente de manera síncrona en el flanco de subida del reloj, y solo cuando la señal `execute` (controlada por `btn3`) se pone en alto.
+  * Garantiza que el display no cambie si se modifican los operandos en el banco de registros, hasta que explícitamente se ordene una nueva ejecución.
+
+- **Módulo System Core:** [system_core.v](src/system_core.v)
+  * Actúa como el puente lógico del sistema, agrupando e interconectando el módulo de escritura, el banco de registros, el selector de combinaciones, la ALU y el latch de resultados.
+  * Se alimenta del reloj (`clk`), de las señales limpias de los switches y de los pulsos de un ciclo (provenientes de `top.v`) y reparte estas señales entre los submódulos de la arquitectura.
+  * Conecta las entradas de la `ALU` (`a` y `b`) de forma directa a las salidas asíncronas (`A` y `B`) del banco de registros.
+  * La salida de la `ALU` (`alu_result`) no va directo al exterior, sino que pasa por un módulo de retención (`result_latch`).
+  * Realiza un desplazamiento de bits (`<<`) para traducir las direcciones binarias de los operandos en uso (`read_addrA` y `read_addrB`) hacia las posiciones físicas de los 4 LEDs indicadores (`leds`).
+
+- **Módulo Top-Level:** [top.v](src/top.v)
+  * Funciona como el nivel más alto de la jerarquía del diseño, encargándose exclusivamente de la interfaz con los periféricos físicos de la placa FPGA.
+  * Genera internamente una señal de reinicio (reset) automático (`rst`) basada en un contador de los primeros ciclos del reloj del sistema (`sysclk`).
+  * Implementa un bloque de sincronización con memoria en cascada (`sw_meta` y `sw_sync`) para estabilizar las señales de entrada de los interruptores y prevenir problemas de metaestabilidad.
+  * Instancia de manera dinámica un módulo de filtro antirrebote (`button_debounce`) para cada uno de los 4 botones utilizando un bloque `generate`, transformando las entradas mecánicas en pulsos limpios de un solo ciclo (`btn_pulse`).
+  * Instancia el módulo principal lógico (`system_core`), pasándole las señales estabilizadas y los pulsos generados por los botones.
+  * Gestiona directamente el LED RGB, asignándole un color fijo dependiendo del valor que devuelva la señal `selected_reg`: Rojo (`0`), Verde (`1`), Azul (`2`) o Blanco (`3`).
+  * Instancia el controlador del display externo de 7 segmentos (`display_tm1637`) para la visualización del resultado retenido.
+
+- **Módulo Write Selector:** [write_selector.v](src/write_selector.v)
+  * Gestiona qué registro dentro del banco será modificado por el usuario al presionar el botón de escritura.
+  * Utiliza un contador interno básico (`write_addr`) de 2 bits.
+  * El contador avanza de forma cíclica (0, 1, 2, 3, 0...) con cada pulso detectado en la señal `select_next` (controlada por `btn0`).
+
+
+
+
   
 ---
 ## Testbench
