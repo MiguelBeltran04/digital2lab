@@ -88,7 +88,37 @@
   * Se cuenta con `registers`, el cual es un arreglo de 4 posiciones y en cada uno se encuentro un valor de 4 bits. Por otro lado se encuentran las entradas `write_enable`, `write_addr` y `write_data`, los cuales sirven para habilitar la escritura de un valor, el registro en el que este se escribira y el valor que se va a guardar. Tambien se tiene a `read_addrA` y a `read_addrB`, los cuales indican las direcciones de los registros que van a ser leidos, y por ultimo estan `A` y `B`, los cuales son los datos leidos de las direcciones previamente marcadas.
   * Si se activa el reset, se ejecuta un bucle el cual hara que se reinicien las 4 posiciones de memoria a 0.
   * si `write_enable`, se guarda el valor que se encuentra en `write_data` en el registro especificado por `write_addr`. En cuanto se cambien las direcciones, las salidas automáticamente cambian sus valores, ya que estas no dependen del clock principal.
+
+- **Módulo display TM1637:** [display_tm1637.v](src/display_tm1637.v)
+  * EL display TM1637 se controla mediante una interfaz serial de dos señales: tm_clk. la cual corresponde al reloj del circuito integrado, y tm_dio, el cual recibe los datos enviados desde la FPGA.
+  * EL sistema recibe un número de 8 bits con signo que corresponde a un intervalo entre -128 y 127. El modulo está dividido en diferentes secciones, la primera de ellas identifica el signo del número que entra al modulo y lo separa en unidades, decenas y centenas. Posteriormente, la función ´seg7´ convierte cada digito en un patrón de 8 bits que determina los segmentos que deben encenderse, incluyendo el signo negativo en caso de que corresponda en la representación del número.
+  * Para sincronizar la comunicación, se utiliza un contador que genera una señal llamada ´step_tick´ cada 5 microsegundos, a partir del reloj principal de 125 Mhz de la FPGA. Esta señal controlará el avance de la FSM que se encarga de ejecutar el protocolo de comunicación.
+  * Los datos a transmitir se preparan utilizando registros que permiten almacenar los comandos y los datos antes de enviarlos al controlador. El registro ´tx_byte´ se encarga de almacenar el byte de 8 bits que será transmitido. la variable ´bit_index´ indica la posición del bit que se está enviando. ´byte_index´ identifica el byte correspondiente a la secuencia dentro de la escritura
+  * La comunicación con el display se realiza en 3 pasos, los cuales se definieron como´transacciones´. La primera parte es la configuración, la cual se activa con una señal cuyo valor hexadecimal es 0x40, la cual se encarga de habilitar el proceso de escritura e incrementa automáticamente las direcciones de memoria después de escribir cada byte.
+  * La escritura se activa con una señal 0xC0, que establece la dirección inicial y transmite los 4 bytes que le corresponden a cada dígito del display.
+  * Una señal 0x8A enciende el display y configura su nivel de brillo a aproximadamente el 20% de su ciclo útil para que se logre visualizar de manera correcta.
+  * La transmisión de los bytes se realiza en série, empezando desde el bit menos significativo. La señal ´tm_dio´ establece el valor de cada bit, mientras que ´tm_clk´ está en estado bajo. Cuando el reloj está en estado alto, el tm1637 recibirá el dato.
+  * Cuando los 8 bits se transmiten, se genera un noveno pulso de reloj para que el TM1637 envíe una confirmación ACK. Esto hace que DIO pase a nivel bajo y se pueda transmitir información nuevamente. Cada ciclo completo de actualización transmite 7 bytes y cada transacción empieza con una condición START y una STOP.
+  * Los registros denominados frame_seg(0-3) almacenan temporalmente los patrones de los 4 digitos y únicamente se actualizan al iniciar un nuevo ciclo de comunicación. De esta forma se garantiza que las variaciones en la entrada alteren los resultados mientras se está realizando una transmisión.
+  * **Máquina de estados finitos (FSM)**: Está compuesta por 14 estados que se encargan de controlar las señales de reloj, el flujo de datos y la confirmación con el TM1637:
   
+    | ESTADO | FUNCIÓN |
+    |--------|---------|
+    | IDLE | Inicia la comunicación y almacena los datos de los 4 dígitos |
+    | START | Inicia la transmisión llevando al pin DIO a bajo con CLK en alto |
+    | START_HOLD | CLK pasa a estado bajo para preparar el envío de datos |
+    | BIT_SETUP | Coloca el bit correspondiente en DIO |
+    | BIT_ HIGH | Coloca CLK en estado alto para transmitir el bit |
+    | BIT_LOW | Baja el estado de CLK y avanza al siguiente bit a transmitir |
+    | ACK_RELEASE | Libera el pin DIO para recibir la confirmación |
+    | ACK_RISE | Sube CLK para el pulso ACK |
+    | ACK_SAMPLE | Lee y almacena la respuesta ACK del TM1637 |
+    | ACK_FALL | Baja el estado de CLK y determina si faltan bytes por transmitir |
+    | LOAD_NEXT | Carga el siguiente byte y reinicia el índice de bits |
+    | STOP_PREP | Lleva DIO a estado bajo para preparar el cierre de la transacción |
+    | STOP_RISE | Sube CLK manteniendo DIO en bajo |
+    | STOP_RELEASE | Libera DIO para finalizar la transacción o iniciar con la siguiente |
+    * La señal tm_dio se controla mediante el registro ´dio_drive_low´ que, cuando el registro está activo, la línea se lleva a un nivel lógico bajo. Cuando está inactivo, la FPGA libera la línea, permitiendo que una resistencia pull_up establezca el nivel lógico alto. De esta manera, el TM1637 utiliza la misma línea para enviar la señal de confirmación ACK.
 ---
 ## Testbench
 
@@ -112,3 +142,6 @@
 
 - **Módulo BANCO REGISTROS:** [reg_bank_tb.v](src/reg_bank_tb.v)
   *
+
+- **Modulo TM1637** Con fines demostrativos y debido a la gran cantidad de señales que este módulo genera en gtkWave, se preparó un video en el que se muestran las señales más importantes del testbench y se muestra el funcionamiento del protocolo de comunicación con el display:
+- 
