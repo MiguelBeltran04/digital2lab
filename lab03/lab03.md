@@ -144,4 +144,7 @@
   *
 
 - **Modulo TM1637** Con fines demostrativos y debido a la gran cantidad de señales que este módulo genera en gtkWave, se preparó un video en el que se muestran las señales más importantes del testbench y se muestra el funcionamiento del protocolo de comunicación con el display:
-- 
+ [![Explicación del testbench TM1637](https://img.youtube.com/vi/bMWKr_Kpmek/maxresdefault.jpg)](https://www.youtube.com/watch?v=bMWKr_Kpmek)
+
+**Evidencia de la implementacion en FPGA**
+[![Implementación en FPGA laboratorio 3](https://img.youtube.com/vi/DcFJ4dNK-OM/maxresdefault.jpg)](https://www.youtube.com/watch?v=DcFJ4dNK-OM)
