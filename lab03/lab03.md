@@ -142,7 +142,8 @@
   * Se escriben valores en distintos registros (5 en R0 y 9 en R1) y se verifica que las salidas asíncronas de lectura `A` y `B` correspondan correctamente a estos datos.
   * Ejecuta una suma (14), cambia la operación a resta sin pulsar ejecutar (verificando que la retención no cambie el 14) y luego ejecuta la resta (-4), corroborando el flujo completo de la ALU y el Latch.
   * Finalmente, simula el cambio de operandos (a R0 y R2), demostrando que la interfaz de los LEDs se actualiza sin alterar el último resultado retenido.
-  * <img width="1917" height="400" alt="image" src="AQUÍ_VA_TU_IMAGEN_SYSTEM_CORE" />
+  * <img width="1915" height="637" alt="image" src="https://github.com/user-attachments/assets/de84252e-4f28-4ad2-b299-f09f17ef59a4" />
+
 
 
 
@@ -151,6 +152,7 @@
   * Incluye retardos prolongados (`repeat(12)`) en la simulación de los botones para superar intencionalmente el filtro antirrebote y asegurar que los pulsos se registren correctamente.
   * Réplica una secuencia completa de operaciones (sumar 5+9, restar 5-9, cambiar operandos y sumar 5+7) para validar todo el flujo de datos.
   * Culmina con una comprobación indispensable para este nivel: verificar que, tras calcular el resultado final de 12, los registros correspondientes al controlador del display TM1637 (`frame_seg2` y `frame_seg3`) almacenen la decodificación correcta en segmentos para el número.
-  * <img width="1917" height="400" alt="image" src="AQUÍ_VA_TU_IMAGEN_TOP" />
+  * <img width="1917" height="575" alt="image" src="https://github.com/user-attachments/assets/4069279c-efeb-48c4-a676-119257857535" />
+
 
 
