@@ -133,7 +133,8 @@
   * Ejecuta varios pulsos secuenciales en la señal `select_next` para corroborar que la dirección de escritura avance en un ciclo cerrado perfecto (0 -> 1 -> 2 -> 3 -> 0).
   * Introduce un periodo de inactividad (varios ciclos de reloj sin pulsar el botón) para confirmar que la última selección se conserva estable en el tiempo.
   * Verifica el reinicio asíncrono, activando el reset en medio de una selección avanzada para asegurar que el contador regrese inmediatamente a la posición 0.
-  * <img width="1917" height="400" alt="image" src="AQUÍ_VA_TU_IMAGEN_WRITE_SELECTOR" />
+  * <img width="1917" height="481" alt="image" src="https://github.com/user-attachments/assets/70f40fbe-325f-455c-8cd0-32e1874dec51" />
+
 
 - **Módulo SYSTEM CORE:** [system_core_tb.v](src/system_core_tb.v)
   * Esta prueba integra lógica y memoria; inicia validando que, tras el reset, los LEDs muestren la combinación inicial predeterminada (registros R0 y R1).
