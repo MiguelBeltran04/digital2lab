@@ -22,7 +22,7 @@
 - Con el botón `BTN2`, el sistema alterna cíclicamente entre 12 combinaciones posibles de operandos (A y B) tomados del banco de registros. Los 4 LEDs estándar de la tarjeta se encienden para indicar qué registros están siendo utilizados en ese momento.
 - Los tres primeros interruptores (`sw[2:0]`) definen el código de la operación que ejecutará la ALU.
 - La operación matemática o lógica se ejecuta únicamente al presionar `BTN3`. En ese instante, la ALU procesa los operandos y el resultado se captura para mostrarse en el display de 7 segmentos.
-- El valor proyectado en el display se mantiene estático, reteniendo la última operación válida, hasta que se vuelva a oprimir `BTN3`, sin importar si los interruptores o los registros se modifican en el proceso.
+- El valor proyectado en el display se mantiene estático, reteniendo la última operación válida, hasta que se vuelva a oprimir `BTN3`, sin imprtar si los interruptores o los registros se modifican en el proceso.
 
 ---
 
