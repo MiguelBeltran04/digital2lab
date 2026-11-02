@@ -128,6 +128,13 @@
   * <img width="1912" height="510" alt="image" src="https://github.com/user-attachments/assets/9ecdc56b-b8f9-466e-8e9a-f79c1d268ff1" />
 
 
+  - **Módulo SELECTOR DE ESCRITURA:** [write_selector_tb.v](src/write_selector_tb.v)
+  * Evalúa el comportamiento del contador de 2 bits asegurándose de que inicie en el registro 0 tras aplicar la señal de `rst`.
+  * Ejecuta varios pulsos secuenciales en la señal `select_next` para corroborar que la dirección de escritura avance en un ciclo cerrado perfecto (0 -> 1 -> 2 -> 3 -> 0).
+  * Introduce un periodo de inactividad (varios ciclos de reloj sin pulsar el botón) para confirmar que la última selección se conserva estable en el tiempo.
+  * Verifica el reinicio asíncrono, activando el reset en medio de una selección avanzada para asegurar que el contador regrese inmediatamente a la posición 0.
+  * <img width="1917" height="400" alt="image" src="AQUÍ_VA_TU_IMAGEN_WRITE_SELECTOR" />
+
 - **Módulo SYSTEM CORE:** [system_core_tb.v](src/system_core_tb.v)
   * Esta prueba integra lógica y memoria; inicia validando que, tras el reset, los LEDs muestren la combinación inicial predeterminada (registros R0 y R1).
   * Simula una secuencia de usuario completa mediante la tarea `press`, la cual imita la pulsación limpia de botones.
@@ -136,13 +143,6 @@
   * Finalmente, simula el cambio de operandos (a R0 y R2), demostrando que la interfaz de los LEDs se actualiza sin alterar el último resultado retenido.
   * <img width="1917" height="400" alt="image" src="AQUÍ_VA_TU_IMAGEN_SYSTEM_CORE" />
 
-
-  - **Módulo SELECTOR DE ESCRITURA:** [write_selector_tb.v](src/write_selector_tb.v)
-  * Evalúa el comportamiento del contador de 2 bits asegurándose de que inicie en el registro 0 tras aplicar la señal de `rst`.
-  * Ejecuta varios pulsos secuenciales en la señal `select_next` para corroborar que la dirección de escritura avance en un ciclo cerrado perfecto (0 -> 1 -> 2 -> 3 -> 0).
-  * Introduce un periodo de inactividad (varios ciclos de reloj sin pulsar el botón) para confirmar que la última selección se conserva estable en el tiempo.
-  * Verifica el reinicio asíncrono, activando el reset en medio de una selección avanzada para asegurar que el contador regrese inmediatamente a la posición 0.
-  * <img width="1917" height="400" alt="image" src="AQUÍ_VA_TU_IMAGEN_WRITE_SELECTOR" />
 
 
 - **Módulo TOP:** [top_tb.v](src/top_tb.v)
