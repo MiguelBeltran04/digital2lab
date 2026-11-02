@@ -125,7 +125,8 @@
   * Se comprueba la captura de un dato válido (como el valor 12) activando la señal `execute` durante un flanco de subida del reloj.
   * Se valida el aislamiento del módulo: al cambiar la entrada `alu_result` a un valor distinto (como -5) mientras `execute` está en bajo, el resultado retenido (`last_result`) permanece intacto en 12.
   * Posteriormente, se envía un nuevo pulso de `execute` para comprobar que ahora sí captura el nuevo valor, y se repite el proceso de alteración en bajo para ratificar la retención.
-  * <img width="1917" height="400" alt="image" src="AQUÍ_VA_TU_IMAGEN_RESULT_LATCH" />
+  * <img width="1912" height="510" alt="image" src="https://github.com/user-attachments/assets/9ecdc56b-b8f9-466e-8e9a-f79c1d268ff1" />
+
 
 - **Módulo SYSTEM CORE:** [system_core_tb.v](src/system_core_tb.v)
   * Esta prueba integra lógica y memoria; inicia validando que, tras el reset, los LEDs muestren la combinación inicial predeterminada (registros R0 y R1).
