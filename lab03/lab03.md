@@ -119,3 +119,36 @@
 
 - **Módulo BANCO REGISTROS:** [reg_bank_tb.v](src/reg_bank_tb.v)
   *
+
+- **Módulo LATCH DE RESULTADOS:** [result_latch_tb.v](src/result_latch_tb.v)
+  * En esta simulación se verifica el correcto funcionamiento del reinicio (reset), asegurando que la salida inicialice en 0.
+  * Se comprueba la captura de un dato válido (como el valor 12) activando la señal `execute` durante un flanco de subida del reloj.
+  * Se valida el aislamiento del módulo: al cambiar la entrada `alu_result` a un valor distinto (como -5) mientras `execute` está en bajo, el resultado retenido (`last_result`) permanece intacto en 12.
+  * Posteriormente, se envía un nuevo pulso de `execute` para comprobar que ahora sí captura el nuevo valor, y se repite el proceso de alteración en bajo para ratificar la retención.
+  * <img width="1917" height="400" alt="image" src="AQUÍ_VA_TU_IMAGEN_RESULT_LATCH" />
+
+- **Módulo SYSTEM CORE:** [system_core_tb.v](src/system_core_tb.v)
+  * Esta prueba integra lógica y memoria; inicia validando que, tras el reset, los LEDs muestren la combinación inicial predeterminada (registros R0 y R1).
+  * Simula una secuencia de usuario completa mediante la tarea `press`, la cual imita la pulsación limpia de botones.
+  * Se escriben valores en distintos registros (5 en R0 y 9 en R1) y se verifica que las salidas asíncronas de lectura `A` y `B` correspondan correctamente a estos datos.
+  * Ejecuta una suma (14), cambia la operación a resta sin pulsar ejecutar (verificando que la retención no cambie el 14) y luego ejecuta la resta (-4), corroborando el flujo completo de la ALU y el Latch.
+  * Finalmente, simula el cambio de operandos (a R0 y R2), demostrando que la interfaz de los LEDs se actualiza sin alterar el último resultado retenido.
+  * <img width="1917" height="400" alt="image" src="AQUÍ_VA_TU_IMAGEN_SYSTEM_CORE" />
+
+
+  - **Módulo SELECTOR DE ESCRITURA:** [write_selector_tb.v](src/write_selector_tb.v)
+  * Evalúa el comportamiento del contador de 2 bits asegurándose de que inicie en el registro 0 tras aplicar la señal de `rst`.
+  * Ejecuta varios pulsos secuenciales en la señal `select_next` para corroborar que la dirección de escritura avance en un ciclo cerrado perfecto (0 -> 1 -> 2 -> 3 -> 0).
+  * Introduce un periodo de inactividad (varios ciclos de reloj sin pulsar el botón) para confirmar que la última selección se conserva estable en el tiempo.
+  * Verifica el reinicio asíncrono, activando el reset en medio de una selección avanzada para asegurar que el contador regrese inmediatamente a la posición 0.
+  * <img width="1917" height="400" alt="image" src="AQUÍ_VA_TU_IMAGEN_WRITE_SELECTOR" />
+
+
+- **Módulo TOP:** [top_tb.v](src/top_tb.v)
+  * Representa la prueba del hardware real. Comienza esperando a que el sistema complete automáticamente sus ciclos de reset basados en el reloj del sistema `sysclk`.
+  * Incluye retardos prolongados (`repeat(12)`) en la simulación de los botones para superar intencionalmente el filtro antirrebote y asegurar que los pulsos se registren correctamente.
+  * Réplica una secuencia completa de operaciones (sumar 5+9, restar 5-9, cambiar operandos y sumar 5+7) para validar todo el flujo de datos.
+  * Culmina con una comprobación indispensable para este nivel: verificar que, tras calcular el resultado final de 12, los registros correspondientes al controlador del display TM1637 (`frame_seg2` y `frame_seg3`) almacenen la decodificación correcta en segmentos para el número.
+  * <img width="1917" height="400" alt="image" src="AQUÍ_VA_TU_IMAGEN_TOP" />
+
+
