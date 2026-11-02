@@ -15,21 +15,25 @@
 
 ## Funcionamiento del sistema
 
--
+- El sistema integra una Unidad Aritmético Lógica (ALU) de 4 bits, un banco de 4 registros de memoria y un display externo (TM1637) para ejecutar y visualizar operaciones matemáticas y lógicas.
+- El ingreso de datos se realiza a través de 4 interruptores físicos (`sw[3:0]`), cuyo valor se guarda temporalmente en los registros internos (R0 a R3).
+- La selección del registro donde se va a escribir se controla con el botón `BTN0`, y el registro activo se identifica de manera visual mediante un color específico en el LED RGB.
+- Al oprimir `BTN1`, el valor actual de los interruptores se almacena de forma persistente en el registro seleccionado.
+- Con el botón `BTN2`, el sistema alterna cíclicamente entre 12 combinaciones posibles de operandos (A y B) tomados del banco de registros. Los 4 LEDs estándar de la tarjeta se encienden para indicar qué registros están siendo utilizados en ese momento.
+- Los tres primeros interruptores (`sw[2:0]`) definen el código de la operación que ejecutará la ALU.
+- La operación matemática o lógica se ejecuta únicamente al presionar `BTN3`. En ese instante, la ALU procesa los operandos y el resultado se captura para mostrarse en el display de 7 segmentos.
+- El valor proyectado en el display se mantiene estático, reteniendo la última operación válida, hasta que se vuelva a oprimir `BTN3`, sin importar si los interruptores o los registros se modifican en el proceso.
+
+---
 
 ### Resumiendo
 
+- **Carga de datos:** Se ingresa el valor en los interruptores (`sw`), se elige el registro destino con `BTN0` (guiado por el LED RGB) y se guarda oprimiendo `BTN1`.
+- **Selección de operandos:** Se oprime `BTN2` para rotar qué pareja de registros actuarán como operando A y operando B (indicado por los LEDs regulares).
+- **Ejecución y visualización:** Se configura la operación deseada con los interruptores `sw[2:0]` y se ejecuta con `BTN3`, actualizando instantáneamente el resultado en el display externo.
+
 
 ---
-
-### Descripción de la arquitectura propuesta
-
-
----
-
-
-
-
 
 
 
@@ -58,6 +62,38 @@
   * Se cuenta con `registers`, el cual es un arreglo de 4 posiciones y en cada uno se encuentro un valor de 4 bits. Por otro lado se encuentran las entradas `write_enable`, `write_addr` y `write_data`, los cuales sirven para habilitar la escritura de un valor, el registro en el que este se escribira y el valor que se va a guardar. Tambien se tiene a `read_addrA` y a `read_addrB`, los cuales indican las direcciones de los registros que van a ser leidos, y por ultimo estan `A` y `B`, los cuales son los datos leidos de las direcciones previamente marcadas.
   * Si se activa el reset, se ejecuta un bucle el cual hara que se reinicien las 4 posiciones de memoria a 0.
   * si `write_enable`, se guarda el valor que se encuentra en `write_data` en el registro especificado por `write_addr`. En cuanto se cambien las direcciones, las salidas automáticamente cambian sus valores, ya que estas no dependen del clock principal.
+
+- **Módulo Latch de Resultados:** [result_latch.v](src/result_latch.v)
+  * Su propósito principal es aislar la salida dinámica de la ALU y retener su último resultado válido.
+  * Se actualiza únicamente de manera síncrona en el flanco de subida del reloj, y solo cuando la señal `execute` (controlada por `btn3`) se pone en alto.
+  * Garantiza que el display no cambie si se modifican los operandos en el banco de registros, hasta que explícitamente se ordene una nueva ejecución.
+
+
+- **Módulo Write Selector:** [write_selector.v](src/write_selector.v)
+  * Gestiona qué registro dentro del banco será modificado por el usuario al presionar el botón de escritura.
+  * Utiliza un contador interno básico (`write_addr`) de 2 bits.
+  * El contador avanza de forma cíclica (0, 1, 2, 3, 0...) con cada pulso detectado en la señal `select_next` (controlada por `btn0`).
+
+
+
+- **Módulo System Core:** [system_core.v](src/system_core.v)
+  * Actúa como el puente lógico del sistema, agrupando e interconectando el módulo de escritura, el banco de registros, el selector de combinaciones, la ALU y el latch de resultados.
+  * Se alimenta del reloj (`clk`), de las señales limpias de los switches y de los pulsos de un ciclo (provenientes de `top.v`) y reparte estas señales entre los submódulos de la arquitectura.
+  * Conecta las entradas de la `ALU` (`a` y `b`) de forma directa a las salidas asíncronas (`A` y `B`) del banco de registros.
+  * La salida de la `ALU` (`alu_result`) no va directo al exterior, sino que pasa por un módulo de retención (`result_latch`).
+  * Realiza un desplazamiento de bits (`<<`) para traducir las direcciones binarias de los operandos en uso (`read_addrA` y `read_addrB`) hacia las posiciones físicas de los 4 LEDs indicadores (`leds`).
+
+- **Módulo Top-Level:** [top.v](src/top.v)
+  * Funciona como el nivel más alto de la jerarquía del diseño, encargándose exclusivamente de la interfaz con los periféricos físicos de la placa FPGA.
+  * Genera internamente una señal de reinicio (reset) automático (`rst`) basada en un contador de los primeros ciclos del reloj del sistema (`sysclk`).
+  * Implementa un bloque de sincronización con memoria en cascada (`sw_meta` y `sw_sync`) para estabilizar las señales de entrada de los interruptores y prevenir problemas de metaestabilidad.
+  * Instancia de manera dinámica un módulo de filtro antirrebote (`button_debounce`) para cada uno de los 4 botones utilizando un bloque `generate`, transformando las entradas mecánicas en pulsos limpios de un solo ciclo (`btn_pulse`).
+  * Instancia el módulo principal lógico (`system_core`), pasándole las señales estabilizadas y los pulsos generados por los botones.
+  * Gestiona directamente el LED RGB, asignándole un color fijo dependiendo del valor que devuelva la señal `selected_reg`: Rojo (`0`), Verde (`1`), Azul (`2`) o Blanco (`3`).
+  * Instancia el controlador del display externo de 7 segmentos (`display_tm1637`) para la visualización del resultado retenido.
+
+
+
 
 - **Módulo display TM1637:** [display_tm1637.v](src/display_tm1637.v)
   * EL display TM1637 se controla mediante una interfaz serial de dos señales: tm_clk. la cual corresponde al reloj del circuito integrado, y tm_dio, el cual recibe los datos enviados desde la FPGA.
@@ -111,6 +147,44 @@
   * <img width="1917" height="536" alt="image" src="https://github.com/user-attachments/assets/5902bef7-a4c1-4cdc-a8bc-534e24bf3780" />
 
 - **Módulo BANCO REGISTROS:** [reg_bank_tb.v](src/reg_bank_tb.v)
+  *
+
+- **Módulo LATCH DE RESULTADOS:** [result_latch_tb.v](src/result_latch_tb.v)
+  * En esta simulación se verifica el correcto funcionamiento del reinicio (reset), asegurando que la salida inicialice en 0.
+  * Se comprueba la captura de un dato válido (como el valor 12) activando la señal `execute` durante un flanco de subida del reloj.
+  * Se valida el aislamiento del módulo: al cambiar la entrada `alu_result` a un valor distinto (como -5) mientras `execute` está en bajo, el resultado retenido (`last_result`) permanece intacto en 12.
+  * Posteriormente, se envía un nuevo pulso de `execute` para comprobar que ahora sí captura el nuevo valor, y se repite el proceso de alteración en bajo para ratificar la retención.
+  * <img width="1912" height="510" alt="image" src="https://github.com/user-attachments/assets/9ecdc56b-b8f9-466e-8e9a-f79c1d268ff1" />
+
+
+  - **Módulo SELECTOR DE ESCRITURA:** [write_selector_tb.v](src/write_selector_tb.v)
+  * Evalúa el comportamiento del contador de 2 bits asegurándose de que inicie en el registro 0 tras aplicar la señal de `rst`.
+  * Ejecuta varios pulsos secuenciales en la señal `select_next` para corroborar que la dirección de escritura avance en un ciclo cerrado perfecto (0 -> 1 -> 2 -> 3 -> 0).
+  * Introduce un periodo de inactividad (varios ciclos de reloj sin pulsar el botón) para confirmar que la última selección se conserva estable en el tiempo.
+  * Verifica el reinicio asíncrono, activando el reset en medio de una selección avanzada para asegurar que el contador regrese inmediatamente a la posición 0.
+  * <img width="1917" height="481" alt="image" src="https://github.com/user-attachments/assets/70f40fbe-325f-455c-8cd0-32e1874dec51" />
+
+
+- **Módulo SYSTEM CORE:** [system_core_tb.v](src/system_core_tb.v)
+  * Esta prueba integra lógica y memoria; inicia validando que, tras el reset, los LEDs muestren la combinación inicial predeterminada (registros R0 y R1).
+  * Simula una secuencia de usuario completa mediante la tarea `press`, la cual imita la pulsación limpia de botones.
+  * Se escriben valores en distintos registros (5 en R0 y 9 en R1) y se verifica que las salidas asíncronas de lectura `A` y `B` correspondan correctamente a estos datos.
+  * Ejecuta una suma (14), cambia la operación a resta sin pulsar ejecutar (verificando que la retención no cambie el 14) y luego ejecuta la resta (-4), corroborando el flujo completo de la ALU y el Latch.
+  * Finalmente, simula el cambio de operandos (a R0 y R2), demostrando que la interfaz de los LEDs se actualiza sin alterar el último resultado retenido.
+  * <img width="1915" height="637" alt="image" src="https://github.com/user-attachments/assets/de84252e-4f28-4ad2-b299-f09f17ef59a4" />
+
+
+
+
+- **Módulo TOP:** [top_tb.v](src/top_tb.v)
+  * Representa la prueba del hardware real. Comienza esperando a que el sistema complete automáticamente sus ciclos de reset basados en el reloj del sistema `sysclk`.
+  * Incluye retardos prolongados (`repeat(12)`) en la simulación de los botones para superar intencionalmente el filtro antirrebote y asegurar que los pulsos se registren correctamente.
+  * Réplica una secuencia completa de operaciones (sumar 5+9, restar 5-9, cambiar operandos y sumar 5+7) para validar todo el flujo de datos.
+  * verificar que tras calcular el resultado final de 12, los registros correspondientes al controlador del display TM1637 (`frame_seg2` y `frame_seg3`) almacenen la decodificación correcta en segmentos para el número.
+  * <img width="1917" height="575" alt="image" src="https://github.com/user-attachments/assets/4069279c-efeb-48c4-a676-119257857535" />
+
+
+
   *Como se logra apreciar, en el momento en el que `rst` es 1, las demás se mantienen en 0. Una vez `write_enable` es igual 1, se especifica que se quiere guardar el valor 0101 en el registro R0 (el mismo ejercicio se hace con los 3 registros faltantes). Como `read_addrA` y `read_addrB` se mantienen en 00, A y B toman los valores que se encuentran guardados en esa dirección (0101). Una vez se cambien los registros de lectura, los valores siempre en A y B cambiaran en el mismo instante de tiempo y los registros de lectura para A y B no dependen entre si como se puede evidenciar a los 350 ns.
   *<img width="1917" height="652" alt="image" src="https://github.com/user-attachments/assets/0acfbfa8-4b22-4a49-bcaa-def85326561f" />
 
