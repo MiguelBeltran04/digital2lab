@@ -151,7 +151,7 @@
   * Representa la prueba del hardware real. Comienza esperando a que el sistema complete automáticamente sus ciclos de reset basados en el reloj del sistema `sysclk`.
   * Incluye retardos prolongados (`repeat(12)`) en la simulación de los botones para superar intencionalmente el filtro antirrebote y asegurar que los pulsos se registren correctamente.
   * Réplica una secuencia completa de operaciones (sumar 5+9, restar 5-9, cambiar operandos y sumar 5+7) para validar todo el flujo de datos.
-  * Culmina con una comprobación indispensable para este nivel: verificar que, tras calcular el resultado final de 12, los registros correspondientes al controlador del display TM1637 (`frame_seg2` y `frame_seg3`) almacenen la decodificación correcta en segmentos para el número.
+  * verificar que tras calcular el resultado final de 12, los registros correspondientes al controlador del display TM1637 (`frame_seg2` y `frame_seg3`) almacenen la decodificación correcta en segmentos para el número.
   * <img width="1917" height="575" alt="image" src="https://github.com/user-attachments/assets/4069279c-efeb-48c4-a676-119257857535" />
 
 
