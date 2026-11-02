@@ -158,7 +158,7 @@
   * <img width="1912" height="510" alt="image" src="https://github.com/user-attachments/assets/9ecdc56b-b8f9-466e-8e9a-f79c1d268ff1" />
 
 
-  -**Módulo SELECTOR DE ESCRITURA:** [write_selector_tb.v](src/write_selector_tb.v)
+- **Módulo SELECTOR DE ESCRITURA:** [write_selector_tb.v](src/write_selector_tb.v)
   * Evalúa el comportamiento del contador de 2 bits asegurándose de que inicie en el registro 0 tras aplicar la señal de `rst`.
   * Ejecuta varios pulsos secuenciales en la señal `select_next` para corroborar que la dirección de escritura avance en un ciclo cerrado perfecto (0 -> 1 -> 2 -> 3 -> 0).
   * Introduce un periodo de inactividad (varios ciclos de reloj sin pulsar el botón) para confirmar que la última selección se conserva estable en el tiempo.
