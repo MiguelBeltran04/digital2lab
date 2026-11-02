@@ -111,7 +111,10 @@
   * <img width="1917" height="536" alt="image" src="https://github.com/user-attachments/assets/5902bef7-a4c1-4cdc-a8bc-534e24bf3780" />
 
 - **Módulo BANCO REGISTROS:** [reg_bank_tb.v](src/reg_bank_tb.v)
-  *
+  *Como se logra apreciar, en el momento en el que `rst` es 1, las demás se mantienen en 0. Una vez `write_enable` es igual 1, se especifica que se quiere guardar el valor 0101 en el registro R0 (el mismo ejercicio se hace con los 3 registros faltantes). Como `read_addrA` y `read_addrB` se mantienen en 00, A y B toman los valores que se encuentran guardados en esa dirección (0101). Una vez se cambien los registros de lectura, los valores siempre en A y B cambiaran en el mismo instante de tiempo y los registros de lectura para A y B no dependen entre si como se puede evidenciar a los 350 ns.
+  *<img width="1917" height="652" alt="image" src="https://github.com/user-attachments/assets/0acfbfa8-4b22-4a49-bcaa-def85326561f" />
+
+  
 
 - **Modulo TM1637** Con fines demostrativos y debido a la gran cantidad de señales que este módulo genera en gtkWave, se preparó un video en el que se muestran las señales más importantes del testbench y se muestra el funcionamiento del protocolo de comunicación con el display:
  [![Explicación del testbench TM1637](https://img.youtube.com/vi/bMWKr_Kpmek/maxresdefault.jpg)](https://www.youtube.com/watch?v=bMWKr_Kpmek)
