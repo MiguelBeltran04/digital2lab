@@ -185,7 +185,7 @@
 
 
 
-  *Como se logra apreciar, en el momento en el que `rst` es 1, las demás se mantienen en 0. Una vez `write_enable` es igual 1, se especifica que se quiere guardar el valor 0101 en el registro R0 (el mismo ejercicio se hace con los 3 registros faltantes). Como `read_addrA` y `read_addrB` se mantienen en 00, A y B toman los valores que se encuentran guardados en esa dirección (0101). Una vez se cambien los registros de lectura, los valores siempre en A y B cambiaran en el mismo instante de tiempo y los registros de lectura para A y B no dependen entre si como se puede evidenciar a los 350 ns.
+- *Como se logra apreciar, en el momento en el que `rst` es 1, las demás se mantienen en 0. Una vez `write_enable` es igual 1, se especifica que se quiere guardar el valor 0101 en el registro R0 (el mismo ejercicio se     *hace con los 3 registros faltantes). Como `read_addrA` y `read_addrB` se mantienen en 00, A y B toman los valores que se encuentran guardados en esa dirección (0101). Una vez se cambien los registros de lectura, los    *valores siempre en A y B cambiaran en el mismo instante de tiempo y los registros de lectura para A y B no dependen entre si como se puede evidenciar a los 350 ns.
   *<img width="1917" height="652" alt="image" src="https://github.com/user-attachments/assets/0acfbfa8-4b22-4a49-bcaa-def85326561f" />
 
   
