@@ -73,6 +73,12 @@ Una vez cargado el programa en la placa Zybo Z7 (haciendo clic en *RUN* en Vitis
 A continuación, se presenta la evidencia en video del funcionamiento del SoC implementado en la FPGA Zybo Z7:
 
 <!-- Reemplaza el siguiente enlace con la URL de tu video de GitHub o YouTube -->
+
+
+https://github.com/user-attachments/assets/e42d3067-8968-4e72-b785-8b0b28b91cd3
+
+
+
 [▶️ Video: Funcionamiento del SoC Zynq-7000 con Switches y LEDs](URL_DEL_VIDEO_AQUI)
 
 ---
