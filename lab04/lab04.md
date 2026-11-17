@@ -11,9 +11,7 @@
 **Semestre:** 2026-2   
 
 ---
-
-
-
+c
 
 ## 1. Objetivos de Aprendizaje
 Durante el desarrollo de esta práctica, se lograron los siguientes objetivos:
@@ -72,18 +70,13 @@ Una vez cargado el programa en la placa Zybo Z7 (haciendo clic en *RUN* en Vitis
 ### Demostración en Video
 A continuación, se presenta la evidencia en video del funcionamiento del SoC implementado en la FPGA Zybo Z7:
 
-<!-- Reemplaza el siguiente enlace con la URL de tu video de GitHub o YouTube -->
 
 
 https://github.com/user-attachments/assets/e42d3067-8968-4e72-b785-8b0b28b91cd3
 
 
-
-[▶️ Video: Funcionamiento del SoC Zynq-7000 con Switches y LEDs](URL_DEL_VIDEO_AQUI)
-
 ---
 
 ## 5. Conclusiones
 - La herramienta *Block Design* simplifica significativamente la creación de sistemas complejos, permitiendo conectar procesadores y periféricos de forma visual antes de generar el código HDL subyacente.
-- Sustituir los botones por los switches demostró la flexibilidad del diseño basado en GPIO y AXI, permitiendo reasignar periféricos físicos de la Programmable Logic (PL) sin tener que reescribir toda la arquitectura del procesador (PS).
 - Se comprendió el flujo de trabajo industrial moderno para sistemas embebidos en FPGAs: definir el hardware primero (Vivado), exportar la plataforma (`.xsa`) y, finalmente, desarrollar el software de control (Vitis).
