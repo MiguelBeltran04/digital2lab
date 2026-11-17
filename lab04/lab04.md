@@ -1,5 +1,20 @@
 # Laboratorio 04: Implementación de un SoC en Zynq-7000
 
+---
+
+## Integrantes
+
+- Miguel Esteban Beltrán Silva – 1025524635
+- Sebastián Camilo Ortegon Hernandez – 1014861874
+- Andres Jacobo Rojas Gonzalez – 1025762831
+ 
+**Semestre:** 2026-2   
+
+---
+
+
+
+
 ## 1. Objetivos de Aprendizaje
 Durante el desarrollo de esta práctica, se lograron los siguientes objetivos:
 - Implementar un System on Chip (SoC) utilizando la herramienta Block Design de Vivado.
